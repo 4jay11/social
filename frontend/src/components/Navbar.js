@@ -1,7 +1,15 @@
 import React from 'react';
 import { assets } from './images/assets';
-
+import { useNavigate } from 'react-router-dom';
 const Navbar = () => {
+  const navigate = useNavigate();
+
+  const handleUploadClick = () => {
+    navigate('/upload');
+  };
+  const handleProfileClick = () => {
+    navigate('/profile');
+  };
   return (
     <nav>
       <div className="container">
@@ -12,9 +20,9 @@ const Navbar = () => {
           <input type="search" placeholder="Search for creators, inspirations, and projects" />
         </div>
         <div className="create">
-          <label className="btn btn-primary" htmlFor="create-post">Create</label>
+          <label className="btn btn-primary" onClick={handleUploadClick} htmlFor="create-post">Create</label>
           <div className="profile-photo">
-            <img src={assets.profile7} alt="Profile" />
+            <img onClick={handleProfileClick} src={assets.profile7} alt="Profile" />
           </div>
         </div>
       </div>
