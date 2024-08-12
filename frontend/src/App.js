@@ -3,11 +3,12 @@ import Navbar from './components/Navbar';
 import Sidebar from './components/Sidebar';
 import Stories from './components/Stories';
 import CreatePost from './components/CreatePost';
-import Feed from './components/Feed';
+
 import Messages from './components/Messages';
 import FriendRequests from './components/FriendRequests';
 import ThemeCustomizer from './components/ThemeCustomizer';
 import './components/App.css';
+import Feeds from './components/Feeds';
 
 const App = () => {
   return (
@@ -22,7 +23,7 @@ const App = () => {
           <div className="middle">
             <Stories />
             <CreatePost />
-            <Feed />
+            <Feeds />
           </div>
           <div className="right">
             <Messages />

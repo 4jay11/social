@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { assets } from './images/assets';
 
 const Navbar = () => {
   return (
@@ -14,7 +14,7 @@ const Navbar = () => {
         <div className="create">
           <label className="btn btn-primary" htmlFor="create-post">Create</label>
           <div className="profile-photo">
-            <img src="./images/profile-1.jpg" alt="Profile" />
+            <img src={assets.profile7} alt="Profile" />
           </div>
         </div>
       </div>

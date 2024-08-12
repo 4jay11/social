@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { assets } from './images/assets';
 
 const Stories = () => {
   return (
@@ -7,31 +7,31 @@ const Stories = () => {
       {/* Map through story data here */}
       <div className="story">
         <div className="profile-photo">
-          <img src="./images/profile-8.jpg" alt="Story" />
+          <img src={assets.profile8} alt="Story" />
         </div>
         <p className="name">Your Story</p>
       </div>
       <div className="story">
         <div className="profile-photo">
-          <img src="./images/profile-8.jpg" alt="Story" />
+          <img src={assets.profile8} alt="Story" />
         </div>
         <p className="name">Your Story</p>
       </div>
       <div className="story">
         <div className="profile-photo">
-          <img src="./images/profile-8.jpg" alt="Story" />
+          <img src={assets.profile8} alt="Story" />
         </div>
         <p className="name">Your Story</p>
       </div>
       <div className="story">
         <div className="profile-photo">
-          <img src="./images/profile-8.jpg" alt="Story" />
+          <img src={assets.profile8} alt="Story" />
         </div>
         <p className="name">Your Story</p>
       </div>
       <div className="story">
         <div className="profile-photo">
-          <img src="./images/profile-8.jpg" alt="Story" />
+          <img src={assets.profile8} alt="Story" />
         </div>
         <p className="name">Your Story</p>
       </div>
