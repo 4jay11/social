@@ -33,9 +33,9 @@ const FeedTemplate = ({
       </div>
       <div className="action-buttons">
         <div className="interaction-buttons">
-          <span><i className="uil uil-heart"><UilHeart /></i></span>
-          <span><i className="uil uil-comment-dots"><UilCommentDots/></i></span>
-          <span><i className="uil uil-share-alt">< UilShareAlt /></i></span>
+          <span><i ><UilHeart /></i></span>
+          <span><i ><UilCommentDots/></i></span>
+          <span><i >< UilShareAlt /></i></span>
         </div>
         <div className="bookmark">
           <span><i><UilBookmarkFull /></i></span>

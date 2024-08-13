@@ -6,35 +6,60 @@ import { formatDistanceToNow, parseISO } from 'date-fns';
 
 const Feeds = () => {
   // Format timeAgo from posted_time
-  const formatTimeAgo = (postedTime) => {
-    return formatDistanceToNow(parseISO(postedTime), { addSuffix: true });
-  };
+  const formatTimeAgo = postedTime =>
+    formatDistanceToNow(parseISO(postedTime), { addSuffix: true });
 
-  console.log(users[0].posts[0].posted_time);
+  // Get the user at the first index (considered as 'me')
+  const me = users[0] || {};
+
+  // Get the user IDs of the people 'me' is following
+  const followingUserIds = me.following || [];
+
+  // Filter the posts of the user at the first index (me)
+  const myPosts = me.posts || [];
+
+  // Filter posts of users that 'me' is following
+  const followingPosts = users
+    .filter(user => followingUserIds.includes(user?.user_id))
+    .flatMap(user => user?.posts || []);
+
+  // Combine both myPosts and followingPosts
+  const allPosts = [...myPosts, ...followingPosts];
+  console.log(allPosts);
 
   return (
     <div className="feeds">
-      {users.map((feed, index) => (
-        <FeedTemplate
-          key={feed.user_id} // Use `feed.user_id` for the key
-          profilePhoto={feed.profile_image || assets.profile7}
-          username={feed.name}
-          location={feed.location || "Unknown Location"}
-          timeAgo={
-            feed.posts[0]?.posted_time ? formatTimeAgo(feed.posts[0].posted_time) : "Just now"
-          }
-          feedPhoto={feed.posts[0]?.image_url || assets.feed1} // Use the first post's image as feedPhoto
-          likedBy={feed.likedBy || [
-            assets.profile6,
-            assets.profile7,
-            assets.profile8,
-          ]}
-          likesCount={feed.posts[0]?.likes.length || 0}
-          caption={feed.posts[0]?.caption || "No caption"}
-          commentsCount={feed.posts[0]?.comments.length || 0}
-          index={index} // Pass the index as a prop
-        />
-      ))}
+      {allPosts.length > 0 ? (
+        allPosts.map((post, index) => {
+          const user = users.find(user =>
+            user?.posts?.some(p => p?.post_id === post?.post_id)
+          ) || {};
+
+          const { profile_image, name, location } = user;
+
+          return (
+            <FeedTemplate
+              key={post?.post_id || index} // Use post_id or index as the key
+              profilePhoto={profile_image || assets.profile7}
+              username={name || 'Unknown User'}
+              location={location || 'Unknown Location'}
+              timeAgo={post?.posted_time ? formatTimeAgo(post?.posted_time) : "Just now"}
+              feedPhoto={post?.image_url || assets.feed1}
+              likedBy={post?.likedBy || [
+                assets.profile6,
+                assets.profile7,
+                assets.profile8,
+              ]}
+              likesCount={post?.likes?.length || 0}
+              caption={post?.caption || "No caption"}
+              commentsCount={post?.comments?.length || 0}
+              index={index} // Pass the index as a prop
+            />
+          );
+        })
+      ) : (
+        <p>No posts available</p>
+      )}
     </div>
   );
 };

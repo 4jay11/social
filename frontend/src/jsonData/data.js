@@ -29,6 +29,11 @@ export const users = [
               username: "emily_jones",
               comment: "Stunning view!",
               commented_time: "2024-08-10T13:00:00Z"
+            }, {
+              user_id: "11",
+              username: "evelyn_clark",
+              comment: "Fantastic outfits!",
+              commented_time: "2024-07-31T15:00:00Z"
             }
           ]
         }
@@ -449,7 +454,7 @@ export const users = [
       posts: [
         {
           post_id: "111",
-          image_url: assets.feed7,
+          image_url: assets.feed,
           caption: "Summer fashion trends.",
           posted_time: "2024-07-31T14:00:00Z",
           likes: ["2", "4", "9"],
