@@ -1,10 +1,35 @@
+
+:root {
+  --color-white: hsl(252, 30%, 100%);
+  --color-light: hsl(252, 30%, 95%);
+  --color-gray: hsl(252, 15%, 65%);
+  --color-primary: hsl(252, 75%, 60%);
+  --color-secondary: hsl(252, 100%, 90%);
+  --color-success: hsl(120, 95%, 65%);
+  --color-danger: hsl(0, 95%, 65%);
+  --color-dark: hsl(252, 30%, 17%);
+  --color-black: hsl(252, 30%, 10%);
+
+  --border-radius: 2rem;
+  --card-border-radius: 1rem;
+  --btn-padding: 0.6rem 2rem;
+  --search-padding: 0.6rem 1rem;
+  --card-padding: 1rem;
+
+
+  --sticky-top-left: 5.4rem;
+  --sticky-top-right: -18rem;
+}
+
+
 /* Container */
 .profile-container {
-  max-width: 935px;
+  width: 60%;
   margin: 0 auto;
+  margin-top: 1rem;
   padding: 20px;
   background-color: white;
-  border-radius: 8px;
+  border-radius:var(--card-border-radius) ;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Minute shadow for the container */
 }
 
@@ -62,6 +87,11 @@
   text-decoration: underline;
 }
 
+
+/* Edit */
+.edit{
+  cursor: pointer;
+}
 /* Buttons */
 .file-input {
   display: none; /* Hide the file input */
@@ -78,6 +108,7 @@
 }
 
 .edit-profile-button {
+  
   background-color: #007bff;
   color: white;
   border: none;
@@ -91,6 +122,7 @@
   background-color: #ff4d4d;
   color: white;
   border: none;
+  margin-right: 0.5rem;
 }
 
 .remove-image-button:hover {

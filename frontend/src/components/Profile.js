@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './Profile.css';
 import { assets } from './images/assets'; // Path to your default image
+import { UilBookmarkFull } from '@iconscout/react-unicons';
 
 const Profile = () => {
   const [profileImage, setProfileImage] = useState(assets.profile8);
@@ -46,6 +47,7 @@ const Profile = () => {
       <div className="profile-head">
         <div className="profile-image-container">
           <img src={profileImage} alt="Profile" className="profile-image" />
+          
           {isEditing && (
             <>
               <input 
@@ -56,11 +58,14 @@ const Profile = () => {
                 className="file-input" 
               />
               <button onClick={handleRemoveImage} className="remove-image-button">Remove Picture</button>
+              <button onClick={handleEditToggle} className="edit-profile-button editing">SaveChanges</button>
+
             </>
           )}
-          <button onClick={handleEditToggle} className={`edit-profile-button ${isEditing ? 'editing' : ''}`}>
+          {/* <button onClick={handleEditToggle} className={`edit-profile-button ${isEditing ? 'editing active' : ''}`}>
             {isEditing ? 'Save Changes' : 'Edit Profile'}
-          </button>
+          </button> */}
+          
         </div>
         <div className="profile-info">
           {isEditing ? (
@@ -86,7 +91,7 @@ const Profile = () => {
             </>
           ) : (
             <>
-              <h1>{username}</h1>
+              <h1>{username} <UilBookmarkFull onClick={handleEditToggle} className="edit" /></h1>
               <p>{name}</p>
             </>
           )}

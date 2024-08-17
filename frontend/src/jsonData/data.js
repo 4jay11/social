@@ -21,7 +21,7 @@ export const users = [
         "post_id": "101",
         "image_url":assets.feed1,
         "caption": "Amazing sunset!",
-        "posted_time": "2024-08-16T12:00:00Z",
+        "posted_time": "2024-08-10T12:00:00Z",
         "likes": ["1", "2", "4", "5", "7"],
         "comments": [
           {
@@ -37,6 +37,20 @@ export const users = [
             "commented_time": "2024-07-31T15:00:00Z"
           }
         ]
+      },{
+        "post_id": "112",
+        "image_url":assets.feed7,
+        "caption":"Wonderfull!",
+        "posted_time": "2024-08-16T12:00:00Z",
+        "likes": ["1", "2",],
+        "comments": [
+          {
+            "user_id": "2",
+            "username": "emily_jones",
+            "comment": "Stunning view!",
+            "commented_time": "2024-08-10T13:00:00Z"
+          }
+        ]
       }
     ],
     "following": ["2", "3", "4", "5"],
@@ -50,10 +64,10 @@ export const users = [
         "viewed": true
       }
     ],
-    "savedPosts": [
+    savedPosts: [
       {
         "id": "1",
-        "bookmarkPhoto": "101"
+        "bookmarkPhoto": ["101","112"]
       },
       {
         "id": "2",

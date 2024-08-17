@@ -19,7 +19,7 @@
   --sticky-top-right: -18rem;
 }
 
-.bookmark {
+.bookmark-container {
   display: flex;
   flex-wrap: wrap; /* Allows items to wrap onto the next line */
   width: 80%;
@@ -41,7 +41,7 @@
   align-items: center;
   
   gap: 1rem;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--card-border-radius);
   background: var(--color-white);
 }
