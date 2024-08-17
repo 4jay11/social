@@ -25,7 +25,8 @@ const Feeds = () => {
 
   // Combine both myPosts and followingPosts
   const allPosts = [...myPosts, ...followingPosts];
-  console.log(allPosts);
+
+
 
   return (
     <div className="feeds">
@@ -36,7 +37,11 @@ const Feeds = () => {
           ) || {};
 
           const { profile_image, name, location } = user;
-
+          // Display the like persons only in the following list of the current user and for
+          const likedBy = post?.likes?.filter(like => followingUserIds.includes(like))?.map(like => users.find(user => user?.user_id === like)?.profile_image) || [];
+          // Name should be the first person who liked this post 
+          const likedName = post?.likes?.length > 0 ? users.find(user => user?.user_id === post?.likes[0])?.name : '';
+          
           return (
             <FeedTemplate
               key={post?.post_id || index} // Use post_id or index as the key
@@ -45,11 +50,12 @@ const Feeds = () => {
               location={location || 'Unknown Location'}
               timeAgo={post?.posted_time ? formatTimeAgo(post?.posted_time) : "Just now"}
               feedPhoto={post?.image_url || assets.feed1}
-              likedBy={post?.likedBy || [
+              likedBy={likedBy || [
                 assets.profile6,
                 assets.profile7,
                 assets.profile8,
               ]}
+              likedName={likedName}
               likesCount={post?.likes?.length || 0}
               caption={post?.caption || "No caption"}
               commentsCount={post?.comments?.length || 0}

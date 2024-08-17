@@ -5,7 +5,7 @@ export const users = [
       user_id: "1",
       username: "john_doe",
       name: "John Doe",
-      profile_image: assets.profile6,
+      profile_image: assets.profile1,
       location: "New York, USA",
       followers_count: 250,
       following_count: 150,
@@ -21,8 +21,8 @@ export const users = [
           post_id: "101",
           image_url: assets.feed1,
           caption: "Amazing sunset!",
-          posted_time: "2024-08-10T12:00:00Z",
-          likes: ["2", "4", "5"],
+          posted_time: "2024-08-16T12:00:00Z",
+          likes: ["1","2", "4", "5","7"],
           comments: [
             {
               user_id: "2",
@@ -38,8 +38,9 @@ export const users = [
           ]
         }
       ],
-      following: ["2", "3"],
+      following: ["2", "3","4","5"],
       followers: ["4", "5"],
+      followRequest: ["2", "3"],
       stories: [
         {
           story_id: "201",
@@ -47,13 +48,14 @@ export const users = [
           posted_time: "2024-08-10T11:00:00Z",
           viewed: true
         }
-      ]
+      ],
+      savedPosts: ["102", "103" ,"104" ,"105"]
     },
     {
       user_id: "2",
       username: "emily_jones",
       name: "Emily Jones",
-      profile_image: assets.profile6,
+      profile_image: assets.profile2,
       location: "Los Angeles, USA",
       followers_count: 300,
       following_count: 200,
@@ -83,6 +85,7 @@ export const users = [
       ],
       following: ["1", "4"],
       followers: ["3", "5"],
+      followRequest: ["1", "4"],
       stories: [
         {
           story_id: "202",
@@ -96,7 +99,7 @@ export const users = [
       user_id: "3",
       username: "david_smith",
       name: "David Smith",
-      profile_image: assets.profile7,
+      profile_image: assets.profile3,
       location: "Chicago, USA",
       followers_count: 280,
       following_count: 160,
@@ -112,7 +115,7 @@ export const users = [
           post_id: "103",
           image_url: assets.feed3,
           caption: "Latest tech trends.",
-          posted_time: "2024-08-08T15:00:00Z",
+          posted_time: "2024-08-15T15:00:00Z",
           likes: ["2", "5", "7"],
           comments: [
             {
@@ -126,6 +129,7 @@ export const users = [
       ],
       following: ["1", "2"],
       followers: ["4", "6"],
+      followRequest: ["1", "2"],
       stories: [
         {
           story_id: "203",
@@ -139,7 +143,7 @@ export const users = [
       user_id: "4",
       username: "alice_jones",
       name: "Alice Jones",
-      profile_image: assets.profile6,
+      profile_image: assets.profile4,
       location: "San Francisco, USA",
       followers_count: 290,
       following_count: 170,
@@ -169,6 +173,7 @@ export const users = [
       ],
       following: ["2", "5"],
       followers: ["1", "6"],
+      followRequest: ["2", "5"],
       stories: [
         {
           story_id: "204",
@@ -182,7 +187,7 @@ export const users = [
       user_id: "5",
       username: "mark_brown",
       name: "Mark Brown",
-      profile_image:assets.profile6,
+      profile_image:assets.profile5,
       location: "Seattle, USA",
       followers_count: 320,
       following_count: 180,
@@ -212,6 +217,7 @@ export const users = [
       ],
       following: ["1", "2"],
       followers: ["3", "7"],
+      followRequest: ["1", "2"],
       stories: [
         {
           story_id: "205",
@@ -255,6 +261,7 @@ export const users = [
       ],
       following: ["3", "4"],
       followers: ["2", "8"],
+      followRequest: ["3", "4"],
       stories: [
         {
           story_id: "206",
@@ -268,7 +275,7 @@ export const users = [
       user_id: "7",
       username: "michael_jordan",
       name: "Michael Jordan",
-      profile_image: assets.profile6,
+      profile_image: assets.profile7,
       location: "Houston, USA",
       followers_count: 350,
       following_count: 200,
@@ -298,10 +305,11 @@ export const users = [
       ],
       following: ["1", "5"],
       followers: ["2", "9"],
+      followRequest: ["1", "5"],
       stories: [
         {
           story_id: "207",
-          image_url:assets.profile6,
+          image_url:assets.profile7,
           posted_time: "2024-08-04T13:00:00Z",
           viewed: false
         }
@@ -311,7 +319,7 @@ export const users = [
       user_id: "8",
       username: "sophia_williams",
       name: "Sophia Williams",
-      profile_image: assets.profile6,
+      profile_image: assets.profile8,
       location: "Boston, USA",
       followers_count: 360,
       following_count: 210,
@@ -341,6 +349,7 @@ export const users = [
       ],
       following: ["3", "6"],
       followers: ["1", "7"],
+      followRequest: ["3", "6"],
       stories: [
         {
           story_id: "208",
@@ -354,7 +363,7 @@ export const users = [
       user_id: "9",
       username: "natalie_taylor",
       name: "Natalie Taylor",
-      profile_image: assets.profile6,
+      profile_image: assets.profile9,
       location: "Atlanta, USA",
       followers_count: 370,
       following_count: 220,
@@ -384,10 +393,11 @@ export const users = [
       ],
       following: ["1", "4"],
       followers: ["2", "8"],
+      followRequest: ["1", "4"],
       stories: [
         {
           story_id: "209",
-          image_url: assets.profile6,
+          image_url: assets.profile9,
           posted_time: "2024-08-02T09:00:00Z",
           viewed: false
         }
@@ -397,7 +407,7 @@ export const users = [
       user_id: "10",
       username: "olivia_martin",
       name: "Olivia Martin",
-      profile_image: assets.profile6,
+      profile_image: assets.profile10,
       location: "Philadelphia, USA",
       followers_count: 380,
       following_count: 230,
@@ -427,6 +437,7 @@ export const users = [
       ],
       following: ["2", "5"],
       followers: ["3", "6"],
+      followRequest: ["2", "5"],
       stories: [
         {
           story_id: "210",
@@ -440,7 +451,7 @@ export const users = [
       user_id: "11",
       username: "evelyn_clark",
       name: "Evelyn Clark",
-      profile_image:assets.profile6,
+      profile_image:assets.profile11,
       location: "San Diego, USA",
       followers_count: 390,
       following_count: 240,
@@ -470,6 +481,7 @@ export const users = [
       ],
       following: ["1", "6"],
       followers: ["2", "9"],
+      followRequest: ["1", "6"],
       stories: [
         {
           story_id: "211",

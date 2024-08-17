@@ -5,10 +5,11 @@ import Stories from './components/Stories';
 import CreatePost from './components/CreatePost';
 
 import Messages from './components/Messages';
-import FriendRequests from './components/FriendRequests';
+
 import ThemeCustomizer from './components/ThemeCustomizer';
 import './components/App.css';
 import Feeds from './components/Feeds';
+import FriendRequestsTemplate from './components/FriendRequestsTemplate';
 
 const App = () => {
   return (
@@ -27,7 +28,7 @@ const App = () => {
           </div>
           <div className="right">
             <Messages />
-            <FriendRequests />
+            <FriendRequestsTemplate />
           </div>
         </div>
       </main>

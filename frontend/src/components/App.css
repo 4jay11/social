@@ -394,13 +394,20 @@ main .container .left .profile{
     margin: 0.7rem 0;
 }
 
+
+
+
+
 .middle .feed .action-buttons{
     display: flex;
     justify-content: space-between;
     align-items: center;
     font-size: 1.4rem;
     margin: 0.6rem;
+
 }
+
+
 
 .middle .liked-by{
     display: flex;
@@ -429,7 +436,7 @@ main .container .left .profile{
 
 main .container .right{
     height: max-content;
-    position: sticky;
+    position:sticky;
     top: var(--sticky-top-right);
     bottom: 0;
 }

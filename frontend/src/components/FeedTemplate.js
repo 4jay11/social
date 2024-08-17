@@ -1,5 +1,6 @@
 
 import React from 'react';
+import {users} from '../jsonData/data';
 import { UilBookmarkFull ,UilHeart, UilCommentDots, UilShareAlt } from '@iconscout/react-unicons';
 const FeedTemplate = ({
   profilePhoto,
@@ -11,7 +12,12 @@ const FeedTemplate = ({
   likesCount,
   caption,
   commentsCount,
+  likedName
 }) => {
+
+ 
+
+  
   return (
     <div className="feed">
       <div className="head">
@@ -25,7 +31,7 @@ const FeedTemplate = ({
           </div>
         </div>
         <span className="edit">
-          <i className="uil uil-ellipsis-h"></i>
+          <i>:</i>
         </span>
       </div>
       <div className="photo">
@@ -33,9 +39,9 @@ const FeedTemplate = ({
       </div>
       <div className="action-buttons">
         <div className="interaction-buttons">
-          <span><i ><UilHeart /></i></span>
-          <span><i ><UilCommentDots/></i></span>
-          <span><i >< UilShareAlt /></i></span>
+          <span className='int'><i ><UilHeart /></i></span>
+          <span className='int'><i ><UilCommentDots/></i></span>
+          <span className='int'><i >< UilShareAlt /></i></span>
         </div>
         <div className="bookmark">
           <span><i><UilBookmarkFull /></i></span>
@@ -48,7 +54,7 @@ const FeedTemplate = ({
           </span>
         ))}
         <p>
-          Liked by <b>Ajay</b> and <b>{likesCount} others</b>
+          Liked by <b>{likedName}</b> and <b>{likesCount-1} others</b>
         </p>
       </div>
       <div className="caption">
