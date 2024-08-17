@@ -1,56 +1,74 @@
 import {assets} from '../components/images/assets'
 
 export const users = [
-    {
-      user_id: "1",
-      username: "john_doe",
-      name: "John Doe",
-      profile_image: assets.profile1,
-      location: "New York, USA",
-      followers_count: 250,
-      following_count: 150,
-      post_count: 8,
-      description: "Photographer and travel enthusiast",
-      is_following: true,
-      profile_visibility: "public",
-      posts_visibility: "public",
-      followers_visibility: "followers_only",
-      following_visibility: "followers_only",
-      posts: [
-        {
-          post_id: "101",
-          image_url: assets.feed1,
-          caption: "Amazing sunset!",
-          posted_time: "2024-08-16T12:00:00Z",
-          likes: ["1","2", "4", "5","7"],
-          comments: [
-            {
-              user_id: "2",
-              username: "emily_jones",
-              comment: "Stunning view!",
-              commented_time: "2024-08-10T13:00:00Z"
-            }, {
-              user_id: "11",
-              username: "evelyn_clark",
-              comment: "Fantastic outfits!",
-              commented_time: "2024-07-31T15:00:00Z"
-            }
-          ]
-        }
-      ],
-      following: ["2", "3","4","5"],
-      followers: ["4", "5"],
-      followRequest: ["2", "3"],
-      stories: [
-        {
-          story_id: "201",
-          image_url: assets.profile7,
-          posted_time: "2024-08-10T11:00:00Z",
-          viewed: true
-        }
-      ],
-      savedPosts: ["102", "103" ,"104" ,"105"]
-    },
+  {
+    "user_id": "1",
+    "username": "john_doe",
+    "name": "John Doe",
+    "profile_image": assets.profile1,
+    "location": "New York, USA",
+    "followers_count": 250,
+    "following_count": 150,
+    "post_count": 8,
+    "description": "Photographer and travel enthusiast",
+    "is_following": true,
+    "profile_visibility": "public",
+    "posts_visibility": "public",
+    "followers_visibility": "followers_only",
+    "following_visibility": "followers_only",
+    "posts": [
+      {
+        "post_id": "101",
+        "image_url":assets.feed1,
+        "caption": "Amazing sunset!",
+        "posted_time": "2024-08-16T12:00:00Z",
+        "likes": ["1", "2", "4", "5", "7"],
+        "comments": [
+          {
+            "user_id": "2",
+            "username": "emily_jones",
+            "comment": "Stunning view!",
+            "commented_time": "2024-08-10T13:00:00Z"
+          },
+          {
+            "user_id": "11",
+            "username": "evelyn_clark",
+            "comment": "Fantastic outfits!",
+            "commented_time": "2024-07-31T15:00:00Z"
+          }
+        ]
+      }
+    ],
+    "following": ["2", "3", "4", "5"],
+    "followers": ["4", "5"],
+    "followRequest": ["2", "3"],
+    "stories": [
+      {
+        "story_id": "201",
+        "image_url": assets.story1,
+        "posted_time": "2024-08-10T11:00:00Z",
+        "viewed": true
+      }
+    ],
+    "savedPosts": [
+      {
+        "id": "1",
+        "bookmarkPhoto": "101"
+      },
+      {
+        "id": "2",
+        "bookmarkPhoto": "102"
+      },
+      {
+        "id": "3",
+        "bookmarkPhoto": "103"
+      },
+      {
+        "id": "4",
+        "bookmarkPhoto": "104"
+      }
+    ]
+  },
     {
       user_id: "2",
       username: "emily_jones",
