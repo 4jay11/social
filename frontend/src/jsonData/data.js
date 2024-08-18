@@ -71,15 +71,15 @@ export const users = [
       },
       {
         "id": "2",
-        "bookmarkPhoto": "102"
+        "bookmarkPhoto": ["102"]
       },
       {
         "id": "3",
-        "bookmarkPhoto": "103"
+        "bookmarkPhoto": ["103"]
       },
       {
         "id": "4",
-        "bookmarkPhoto": "104"
+        "bookmarkPhoto": ["104"]
       }
     ]
   },
