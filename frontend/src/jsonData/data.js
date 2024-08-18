@@ -55,7 +55,7 @@ export const users = [
     ],
     "following": ["2", "3", "4", "5"],
     "followers": ["4", "5"],
-    "followRequest": ["2", "3"],
+    "followRequest": ["2", "3","4"],
     "stories": [
       {
         "story_id": "201",
@@ -203,7 +203,7 @@ export const users = [
           ]
         }
       ],
-      following: ["2", "5"],
+      following: ["2","3","4","5"],
       followers: ["1", "6"],
       followRequest: ["2", "5"],
       stories: [

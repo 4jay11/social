@@ -1,5 +1,5 @@
 import React from 'react';
-import { assets } from './images/assets';
+
 import { useNavigate } from 'react-router-dom';
 const Navbar = ({currentUser}) => {
   const navigate = useNavigate();

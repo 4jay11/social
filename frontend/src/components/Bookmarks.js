@@ -31,7 +31,7 @@ const Bookmarks = ({currentUser}) => {
 
   return (
     <div className="book">
-      <Navbar />
+      <Navbar currentUser={currentUser}/>
       <div className="book-title">
       <h1 className="bookmarks">Bookmarks</h1>
       </div>
