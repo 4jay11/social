@@ -39,7 +39,7 @@ export const users = [
         ]
       },{
         "post_id": "112",
-        "image_url":assets.feed7,
+        "image_url":assets.profile1,
         "caption":"Wonderfull!",
         "posted_time": "2024-08-16T12:00:00Z",
         "likes": ["1", "2",],
