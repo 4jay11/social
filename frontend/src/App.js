@@ -10,25 +10,26 @@ import ThemeCustomizer from './components/ThemeCustomizer';
 import './components/App.css';
 import Feeds from './components/Feeds';
 import FriendRequestsTemplate from './components/FriendRequestsTemplate';
-
+import {users} from './jsonData/data'
 const App = () => {
+  const currentUser=users[0] || {};
   return (
     <div className="App">
-      <Navbar />
+      <Navbar currentUser={currentUser} />
       <main>
         <div className="container">
           <div className="left">
-            <Sidebar />
+            <Sidebar name={currentUser.name} profilePhoto={currentUser.profile_image} user_name={currentUser.username} />
             <label htmlFor="create-post" className="btn btn-primary">Create Post</label>
           </div>
           <div className="middle">
             <Stories />
-            <CreatePost />
-            <Feeds />
+            <CreatePost currentUser={currentUser} />
+            <Feeds currentUser={currentUser} />
           </div>
           <div className="right">
             <Messages />
-            <FriendRequestsTemplate />
+            <FriendRequestsTemplate currentUser={currentUser} />
           </div>
         </div>
       </main>

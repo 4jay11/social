@@ -1,7 +1,7 @@
 import React from 'react';
 import { assets } from './images/assets';
 import { useNavigate } from 'react-router-dom';
-const Navbar = () => {
+const Navbar = ({currentUser}) => {
   const navigate = useNavigate();
 
   const handleUploadClick = () => {
@@ -22,7 +22,7 @@ const Navbar = () => {
         <div className="create">
           <label className="btn btn-primary" onClick={handleUploadClick} htmlFor="create-post">Create</label>
           <div className="profile-photo">
-            <img onClick={handleProfileClick} src={assets.profile7} alt="Profile" />
+            <img onClick={handleProfileClick} src={currentUser.profile_image} alt="Profile" />
           </div>
         </div>
       </div>

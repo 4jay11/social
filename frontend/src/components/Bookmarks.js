@@ -2,9 +2,9 @@ import React from "react";
 import "./Bookmarks.css";
 import BookmarksTemplate from "./BookmarksTemplate";
 import { users } from "../jsonData/data";
-
-const Bookmarks = () => {
-  const searchUserId = "1"; // User ID for whom you want to display bookmarks
+import Navbar from "./Navbar";
+const Bookmarks = ({currentUser}) => {
+  const searchUserId = currentUser.user_id; // User ID for whom you want to display bookmarks
 
   // Find the user by ID
   const user = users.find((user) => user.user_id === searchUserId);
@@ -31,7 +31,11 @@ const Bookmarks = () => {
 
   return (
     <div className="book">
+      <Navbar />
+      <div className="book-title">
       <h1 className="bookmarks">Bookmarks</h1>
+      </div>
+      
       <div className="bookmark-container">
         {bookmarkedImages.length ? (
           bookmarkedImages.map((image, index) => (

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import {users} from '../jsonData/data';
-import { UilBookmarkFull ,UilHeart, UilCommentDots, UilShareAlt } from '@iconscout/react-unicons';
+import {UilEllipsisH, UilBookmarkFull ,UilHeart, UilCommentDots, UilShareAlt } from '@iconscout/react-unicons';
 const FeedTemplate = ({
   profilePhoto,
   username,
@@ -31,7 +31,7 @@ const FeedTemplate = ({
           </div>
         </div>
         <span className="edit">
-          <i>:</i>
+          <i><UilEllipsisH /></i>
         </span>
       </div>
       <div className="photo">

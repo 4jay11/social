@@ -392,6 +392,7 @@ main .container .left .profile{
     border-radius: var(--card-border-radius);
     overflow: hidden;
     margin: 0.7rem 0;
+    height: 21rem;
 }
 
 

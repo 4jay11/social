@@ -39,7 +39,7 @@ export const users = [
         ]
       },{
         "post_id": "112",
-        "image_url":assets.profile1,
+        "image_url":assets.feed6,
         "caption":"Wonderfull!",
         "posted_time": "2024-08-16T12:00:00Z",
         "likes": ["1", "2",],
@@ -115,7 +115,7 @@ export const users = [
           ]
         }
       ],
-      following: ["1", "4"],
+      following: ["1", "4","5"],
       followers: ["3", "5"],
       followRequest: ["1", "4"],
       stories: [

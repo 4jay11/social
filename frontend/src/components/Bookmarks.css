@@ -33,7 +33,9 @@
   overflow: hidden; /* Ensures no scrollbars are shown */
 }
 
-
+.book-title{
+  margin: 5rem 0 0 0;
+}
 
 .bookmarks {
   width: 80%;

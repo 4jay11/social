@@ -4,13 +4,13 @@ import FeedTemplate from './FeedTemplate';
 import { users } from '../jsonData/data'; // Assuming users is the array of feed data
 import { formatDistanceToNow, parseISO } from 'date-fns';
 
-const Feeds = () => {
+const Feeds = ({currentUser}) => {
   // Format timeAgo from posted_time
   const formatTimeAgo = postedTime =>
     formatDistanceToNow(parseISO(postedTime), { addSuffix: true });
 
   // Get the user at the first index (considered as 'me')
-  const me = users[0] || {};
+  const me = currentUser|| {};
 
   // Get the user IDs of the people 'me' is following
   const followingUserIds = me.following || [];

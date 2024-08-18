@@ -3,7 +3,7 @@ import { UilHome, UilCompass, UilBell, UilEnvelopeAlt,UilBookmarkFull } from '@i
 import {assets} from './images/assets'
 import { useNavigate } from 'react-router-dom';
 
-const Sidebar = () => {
+const Sidebar = ({name, profilePhoto ,user_name}) => {
   const navigate = useNavigate();
   const handleBookmark = () => {
     console.log('Bookmark clicked');
@@ -13,11 +13,11 @@ const Sidebar = () => {
     <div className="left">
       <div className="profile" href="#">
         <div className="profile-photo">
-          <img src={assets.profile7} alt="Profile" />
+          <img src={profilePhoto} alt="Profile" />
         </div>
         <div className="handle">
-          <h4>Anu</h4>
-          <p className="text-muted">@anu</p>
+          <h4>{name}</h4>
+          <p className="text-muted">{user_name} </p>
         </div>
       </div>
     
