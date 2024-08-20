@@ -13,9 +13,9 @@ const Routee = () => {
     <Router>
       <Routes>
         <Route path="/" element={<App/>} />
-        <Route path="/pro" element={<ProfileSection currentUser={currentUser}/>} />  
+        <Route path="/profile" element={<ProfileSection currentUser={currentUser}/>} />  
         <Route path="/upload" element={<UploadPost />} />
-        <Route path="/profile" element={<Profile currentUser={currentUser} />} />
+        <Route path="/pro" element={<Profile currentUser={currentUser} />} />
         <Route path="/bookmark" element={<Bookmarks currentUser={currentUser}/>} />
       </Routes>
     </Router>

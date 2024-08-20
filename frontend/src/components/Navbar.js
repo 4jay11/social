@@ -3,6 +3,9 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 const Navbar = ({currentUser}) => {
   const navigate = useNavigate();
+  const handleHomeClick = () => {
+    navigate('/');
+  };
 
   const handleUploadClick = () => {
     navigate('/upload');
@@ -13,7 +16,7 @@ const Navbar = ({currentUser}) => {
   return (
     <nav>
       <div className="container">
-        <h2 className="log">Social</h2>
+        <h2 className="log" onClick={handleHomeClick}>Social</h2>
 
         <div className="search-bar">
           <i className="uil uil-search"></i>

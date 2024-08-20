@@ -2,16 +2,17 @@ import React from 'react'
 import './ProfileSection.css' 
 import { UilEdit,UilFileAlt, UilUserPlus, UilUsersAlt } from '@iconscout/react-unicons';
 import { assets } from './images/assets';  
-const ProfileCard = () => {
+const ProfileCard = ({currentUser}) => {
+  const { name, profile_image, username ,description} = currentUser;
   return (
     <div className='profile-card'>
       <div className='image'>
-        <img src={assets.profile7} alt='profile' className='profile-img'/>
+        <img src={profile_image} alt='profile' className='profile-img'/>
       </div>
       <div className='text-data'>
-      <span className='id text-muted'>_ajay.4 <UilEdit className='id' /></span>
-        <span className='name'>Ajay</span>
-        <span className='oneline'>Student</span>
+      <span className='idd text-muted'>{username} <UilEdit className='id' /></span>
+        <span className='name'>{name}</span>
+        <span className='oneline'>{description}</span>
       </div>
       <div className='buttons'>
         <button className='button'>Follow</button>
@@ -20,17 +21,17 @@ const ProfileCard = () => {
       <div className='stats'>
       <div className='data'>
         <i><UilFileAlt /></i>
-        <span>44k</span>
+        <span>{currentUser.posts.length}</span>
         
       </div>
       <div className='data'>
         <i><UilUserPlus /></i>
-        <span>4k</span>
+        <span>{currentUser.following.length}</span>
 
       </div>
       <div className='data'>
         <i><UilUsersAlt /></i>
-        <span>11k</span>
+        <span>{currentUser.followers.length}</span>
 
       </div>
       </div>

@@ -10,7 +10,7 @@ export const users = [
     "followers_count": 250,
     "following_count": 150,
     "post_count": 8,
-    "description": "Photographer and travel enthusiast",
+    "description": "Photographer",
     "is_following": true,
     "profile_visibility": "public",
     "posts_visibility": "public",
@@ -51,7 +51,7 @@ export const users = [
             "commented_time": "2024-08-10T13:00:00Z"
           }
         ]
-      }
+      },
     ],
     "following": ["2", "3", "4", "5"],
     "followers": ["4", "5"],
@@ -62,7 +62,13 @@ export const users = [
         "image_url": assets.story1,
         "posted_time": "2024-08-10T11:00:00Z",
         "viewed": true
-      }
+      },
+      {
+        "story_id": "2011",
+        "image_url": assets.story2,
+        "posted_time": "2024-08-20T11:00:00Z",
+        "viewed": true
+      },
     ],
     savedPosts: [
       {
