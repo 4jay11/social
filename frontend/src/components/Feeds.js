@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { assets } from './images/assets';
+import axios from 'axios';
 import FeedTemplate from './FeedTemplate';
 import { users } from '../jsonData/data'; // Assuming users is the array of feed data
 import { formatDistanceToNow, parseISO } from 'date-fns';
 
-const Feeds = ({currentUser}) => {
+const Feeds = () => {
+
+  const [currentUser, setCurrentUser] = React.useState(null);
+  const [followingPosts, setfollowingPosts] = React.useState([]);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:5000/api/user/1`);
+        setCurrentUser(response.data);
+        const res = await axios.get(`http://127.0.0.1:5000/api/fp/1`);
+        setfollowingPosts(res.data);
+        
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
+
+    fetchUser();
+  }, []);
+
+
+
   // Format timeAgo from posted_time
   const formatTimeAgo = postedTime =>
     formatDistanceToNow(parseISO(postedTime), { addSuffix: true });
@@ -19,12 +41,10 @@ const Feeds = ({currentUser}) => {
   const myPosts = me.posts || [];
 
   // Filter posts of users that 'me' is following
-  const followingPosts = users
-    .filter(user => followingUserIds.includes(user?.user_id))
-    .flatMap(user => user?.posts || []);
-
+  const followingPost = followingPosts || [];
+  console.log(followingPost[0])
   // Combine both myPosts and followingPosts
-  const allPosts = [...myPosts, ...followingPosts];
+  const allPosts = [...myPosts, ...followingPost];
 
 
 
@@ -32,6 +52,7 @@ const Feeds = ({currentUser}) => {
     <div className="feeds">
       {allPosts.length > 0 ? (
         allPosts.map((post, index) => {
+          
           const user = users.find(user =>
             user?.posts?.some(p => p?.post_id === post?.post_id)
           ) || {};
