@@ -1,13 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import "./Bookmarks.css";
 import BookmarksTemplate from "./BookmarksTemplate";
 import { users } from "../jsonData/data";
+import axios from "axios";
 import Navbar from "./Navbar";
 const Bookmarks = ({currentUser}) => {
-  const searchUserId = currentUser.user_id; // User ID for whom you want to display bookmarks
+  const [currentUse, setCurrentUser] = React.useState(currentUser);
+  const [followingPosts, setfollowingPosts] = React.useState([]);
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await axios.get(`http://127.0.0.1:5000/api/user/1`);
+        setCurrentUser(response.data);
+        const res = await axios.get(`http://127.0.0.1:5000/api/fp/1`);
+        setfollowingPosts(res.data);
+      } catch (err) {
+        console.error(err.message);
+      }
+    };
 
+    fetchUser();
+  }, []);
+  const searchUserId = currentUse.user_id; // User ID for whom you want to display bookmarks
+const all=[...[currentUse],...followingPosts]
+console.log(all[0]);
+
+  
+  
   // Find the user by ID
-  const user = users.find((user) => user.user_id === searchUserId);
+  // const user = users.find((user) => user.user_id === searchUserId);
+  const user = all[0]
+
 
   // Get saved posts, or an empty array if none exist
   const savedPosts = user?.savedPosts ?? [];

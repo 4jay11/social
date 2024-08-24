@@ -73,7 +73,7 @@ export const users = [
     savedPosts: [
       {
         "id": "1",
-        "bookmarkPhoto": ["101","112"]
+        "bookmarkPhoto": ["101"]
       },
       {
         "id": "2",

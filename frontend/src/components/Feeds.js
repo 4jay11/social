@@ -43,7 +43,7 @@ const Feeds = () => {
 
   // currentUser and Following User
   const users = [...[me], ...followingPost];
-  // console.log(users);
+  console.log(users);
 
   // Extract the posts from the followingPost array to new array
   const followingP = followingPost?.map((post) => post?.posts?.[0]) || [];
@@ -86,7 +86,7 @@ const Feeds = () => {
           const likedName = randomLikeId
             ? users.find((user) => user?.user_id === randomLikeId)?.name
             : "You";
-console.log(likedName);
+
           return (
             <FeedTemplate
               key={post?.post_id || index} // Use post_id or index as the key
