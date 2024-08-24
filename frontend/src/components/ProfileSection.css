@@ -147,7 +147,7 @@
 .highlights {
   height: 90px;
   overflow: hidden; /* Ensures no scrollbars are shown */
-
+gap: 0.5rem;
   border-radius: 1rem;
   padding: 8px 0 0 10px;
   display: flex;
@@ -155,14 +155,13 @@
 
 .feed-pic {
   width: 5.1rem;
-  height: 4.5rem;
+  height: 5rem;
   display: flex;
 }
 
 .feed-pic img {
   border-radius: 50%;
   display: flex;
-  margin-right: 10px;
   border: 3px solid blue;
 }
 

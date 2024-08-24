@@ -15,7 +15,6 @@ const FeedTemplate = ({
   likedName
 }) => {
 
- 
 
   
   return (
