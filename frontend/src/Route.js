@@ -7,6 +7,10 @@ import Bookmarks from './components/Bookmarks';
 import {users} from './jsonData/data'
 import ProfileCard from './components/ProfileCard';
 import ProfileSection from './components/ProfileSection';
+import Cloudinary from './components/Cloudinary';
+import SecureUpload from './components/SecureUpload';
+
+
 const Routee = () => {
   const currentUser=users[0] || {};
   return (
@@ -17,6 +21,10 @@ const Routee = () => {
         <Route path="/upload" element={<UploadPost />} />
         <Route path="/pro" element={<Profile currentUser={currentUser} />} />
         <Route path="/bookmark" element={<Bookmarks currentUser={currentUser}/>} />
+        <Route path="/cloudinary" element={<Cloudinary currentUser={currentUser}/>} />
+        <Route path="/secure-upload" element={<SecureUpload currentUser={currentUser}/>} />
+     
+
       </Routes>
     </Router>
   );

@@ -51,6 +51,7 @@ const Feeds = () => {
 
   // Combine both myPosts and followingPosts
   const allPosts = [...myPosts, ...followingP];
+console.log(allPosts);
 
   return (
     <div className="feeds">

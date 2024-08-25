@@ -45,7 +45,7 @@ console.log(all[0]);
       : [savedPost.bookmarkPhoto];
 
     bookmarkPhotoArray.forEach((bookmarkPostId) => {
-      const matchingPost = users.flatMap(otherUser => otherUser.posts).find(post => post.post_id === bookmarkPostId);
+      const matchingPost = all.flatMap(otherUser => otherUser.posts).find(post => post.post_id === bookmarkPostId);
       if (matchingPost) {
         bookmarkedImages.push(matchingPost.image_url);
       }

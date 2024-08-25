@@ -1,23 +1,81 @@
-import React, { useState } from 'react';
-import './UploadPost.css';
+import React, { useState } from "react";
+import "./UploadPost.css";
+import axios from "axios";
+import { ThreeDots } from "react-loader-spinner";
 
 const UploadPost = () => {
-  const [image, setImage] = useState(null);
-  const [summary, setSummary] = useState('');
+  const [summary, setSummary] = useState("");
+  const [imgFile, setImgFile] = useState(null);
+  const [imgPreview, setImgPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [cloudImgId, setCloudImgId] = useState(null);
+
 
   const handleImageChange = (e) => {
-    setImage(URL.createObjectURL(e.target.files[0]));
+    const file = e.target.files[0];
+    setImgFile(file);
+    setImgPreview(URL.createObjectURL(file));
   };
 
   const handleSummaryChange = (e) => {
     setSummary(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const uploadFile = async () => {
+    const data = new FormData();
+    data.append("file", imgFile);
+    data.append("upload_preset", "images_preset");
+
+    try {
+      const cloudName = process.env.REACT_APP_CLOUDINARY_CLOUD_NAME;
+      const api = `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`;
+
+      const res = await axios.post(api, data);
+      const { secure_url } = res.data;
+
+      if (secure_url) {
+        setCloudImgId(secure_url);
+        return secure_url;
+      } else {
+        throw new Error("Failed to upload file");
+      }
+    } catch (error) {
+      console.error("Error during Cloudinary upload:", error);
+      throw error;
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle the form submission logic here
-    console.log('Image:', image);
-    console.log('Summary:', summary);
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const imageUrl = await uploadFile();
+
+      if (imageUrl) {
+        setImgFile(null);
+        setImgPreview(null);
+        document.getElementById("imageInput").value = ""; // Clear file input
+        
+        const res = await axios.post("http://127.0.0.1:5000/api/users/post/1", {
+          user_id: "1", // Replace with actual user ID
+          image_url: imageUrl,
+          caption: summary,
+        });
+
+        console.log("Backend response:", res.data);
+        setMessage("Post added successfully");
+      } else {
+        setMessage("Failed to upload image");
+      }
+    } catch (error) {
+      console.error("Error during post creation:", error);
+      setMessage("Error during post creation");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -25,8 +83,8 @@ const UploadPost = () => {
       <form onSubmit={handleSubmit} className="upload-form">
         <div className="image-upload">
           <label htmlFor="imageInput" className="image-label">
-            {image ? (
-              <img src={image} alt="Preview" className="image-preview" />
+            {imgPreview ? (
+              <img src={imgPreview} alt="Preview" className="image-preview" />
             ) : (
               <span className="image-placeholder">Click to Upload Image</span>
             )}
@@ -47,9 +105,22 @@ const UploadPost = () => {
             className="summary-input"
           />
         </div>
-        <button type="submit" className="submit-button">
+        <button type="submit" disabled={loading} className="submit-button">
           Submit
         </button>
+        {loading && (
+          <ThreeDots
+            height="80"
+            width="80"
+            radius="9"
+            color="#4fa94d"
+            ariaLabel="three-dots-loading"
+            wrapperStyle={{}}
+            wrapperClassName=""
+            visible={true}
+          />
+        )}
+        {message && <p>{message}</p>}
       </form>
     </div>
   );
