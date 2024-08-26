@@ -5,6 +5,6 @@ const { getCurrentUser ,getFollowedUsersPosts,getBookmarkedPosts,addNewPost } = 
 // Route to get the current user by ID
 router.get('/user/:id', getCurrentUser);
 router.get('/fp/:id', getFollowedUsersPosts);
-router.get('/users/post/:id', addNewPost);
+router.post('/users/post', addNewPost);
 // router.get('/bookmarks/:id', getBookmarkedPosts);
 module.exports = router;

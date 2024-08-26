@@ -41,41 +41,49 @@ const getFollowedUsersPosts = async (req, res) => {
 // Function to add a new post with a secure URL
 const addNewPost = async (req, res) => {
   try {
-    const { image_url, caption } = req.body;
-    const currentUserId = req.params.id;
-    const user = await User.findOne({ user_id: currentUserId });
+    const { user_id, image_url, caption } = req.body;
+
+    // Check if image_url and caption are provided
+    if (!image_url || !caption) {
+      return res.status(400).json({ message: 'Image URL and caption are required.' });
+    }
+
+    const user = await User.findOne({ user_id });
 
     if (user) {
-      // Get the last post's id and increment it by 1
-      const lastPostId = user.posts.length > 0 ? user.posts[user.posts.length - 1].post_id : 0;
-      const newPostId = lastPostId + 1;
-console.log(newPostId);
-
+      const newPostId = new mongoose.Types.ObjectId().toString();
 
       const newPost = {
         _id: new mongoose.Types.ObjectId().toString(),
         post_id: newPostId,
-        image_url: image_url,
-        caption: caption,
+        image_url,  // Since `image_url` is already required, no need for fallback value
+        caption,    // Since `caption` is already required, no need for fallback value
         posted_time: new Date(),
         likes: [],
         comments: [],
       };
 
+      // Append the new post to the user's posts array
       user.posts.push(newPost);
+
+      // Increment the post count
       user.post_count += 1;
 
+      // Save the user document with the new post
       await user.save();
 
+      // Send a success response
       res.status(201).json({ message: 'Post added successfully', post: newPost });
     } else {
+      // User not found
       res.status(404).json({ message: 'User not found' });
     }
   } catch (error) {
-    console.error(error.message);
+    console.error('Error during post creation:', error);
     res.status(500).json({ message: 'Server error', error });
   }
 };
+
 
 
 

@@ -55,11 +55,13 @@ const UploadPost = () => {
       const imageUrl = await uploadFile();
 
       if (imageUrl) {
+        console.log("SuccessfullyUploadedImage"+imageUrl);
+        
         setImgFile(null);
         setImgPreview(null);
         document.getElementById("imageInput").value = ""; // Clear file input
         
-        const res = await axios.post("http://127.0.0.1:5000/api/users/post/1", {
+        const res = await axios.post("http://127.0.0.1:5000/api/users/post", {
           user_id: "1", // Replace with actual user ID
           image_url: imageUrl,
           caption: summary,
