@@ -395,10 +395,13 @@ main .container .left .profile{
     border-radius: var(--card-border-radius);
     overflow: hidden;
     margin: 0.7rem 0;
-    height: 21rem;
+    height: 18rem;
 }
 
-
+.middle .feed .user .profile-pic img{
+    border-radius: var(--border-radius);
+    height: 2.5rem;
+}
 
 
 

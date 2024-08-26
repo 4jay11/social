@@ -8,6 +8,7 @@ import { formatDistanceToNow, parseISO } from "date-fns";
 const Feeds = () => {
   const [currentUser, setCurrentUser] = React.useState(null);
   const [followingPosts, setfollowingPosts] = React.useState([]);
+  
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -43,7 +44,7 @@ const Feeds = () => {
 
   // currentUser and Following User
   const users = [...[me], ...followingPost];
-  console.log(users);
+
 
   // Extract the posts from the followingPost array to new array
   const followingP = followingPost?.map((post) => post?.posts?.[0]) || [];
@@ -51,8 +52,8 @@ const Feeds = () => {
 
   // Combine both myPosts and followingPosts
   const allPosts = [...myPosts, ...followingP];
-console.log(allPosts);
 
+ 
   return (
     <div className="feeds">
       {allPosts.length > 0 ? (
@@ -61,8 +62,29 @@ console.log(allPosts);
             users.find((user) =>
               user?.posts?.some((p) => p?.post_id === post?.post_id)
             ) || {};
+          // console.log(user);
+          const location = user.posts[index]?.location
+          const { profile_image, name, followers = [] } = user;
 
-          const { profile_image, name, location } = user;
+          // Find the followers of the posted user who are also being followed by the current user
+          const mutualFollowers =
+            followers.filter((followerId) => followingUserIds.includes(followerId)) || [];
+    
+          // Get profile images of mutual followers
+          const mutualFollowerImages = mutualFollowers.map(
+            (followerId) =>
+              users.find((user) => user?.user_id === followerId)?.profile_image
+          );
+    
+          // Randomly pick a name from mutual followers
+          const randomFollowerName =
+            mutualFollowers.length > 0
+              ? users.find((user) => user?.user_id === mutualFollowers[0])?.name
+              : "You";
+
+            
+              
+          
           // Display the like persons only in the following list of the current user and for
           const likedBy =
             post?.likes
@@ -90,6 +112,7 @@ console.log(allPosts);
 
           return (
             <FeedTemplate
+            user_id={user?.user_id}
               key={post?.post_id || index} // Use post_id or index as the key
               profilePhoto={profile_image || assets.profile7}
               username={name || "Unknown User"}
@@ -105,6 +128,9 @@ console.log(allPosts);
               }
               likedName={likedName}
               likesCount={post?.likes?.length || 0}
+              mutualFollowers={mutualFollowers}
+              randomFollowerName={randomFollowerName}
+              mutualFollowerImages={mutualFollowerImages}
               caption={post?.caption || "No caption"}
               commentsCount={post?.comments?.length || 0}
               index={index} // Pass the index as a prop

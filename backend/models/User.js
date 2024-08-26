@@ -12,6 +12,7 @@ const postSchema = new mongoose.Schema({
     image_url: String,
     caption: String,
     posted_time: Date,
+    location: String,
     likes: [String],
     comments: [commentSchema],
 });

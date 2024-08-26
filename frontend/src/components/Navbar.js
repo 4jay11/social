@@ -1,7 +1,8 @@
 import React from 'react';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 const Navbar = ({currentUser}) => {
+  const id = currentUser.user_id;
   const navigate = useNavigate();
   const handleHomeClick = () => {
     navigate('/');
@@ -11,8 +12,9 @@ const Navbar = ({currentUser}) => {
     navigate('/upload');
   };
   const handleProfileClick = () => {
-    navigate('/profile');
+    navigate('/profile/'+id);
   };
+
   return (
     <nav>
       <div className="container">

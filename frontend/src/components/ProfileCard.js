@@ -3,11 +3,13 @@ import './ProfileSection.css'
 import { UilEdit,UilFileAlt, UilUserPlus, UilUsersAlt } from '@iconscout/react-unicons';
 import { assets } from './images/assets';  
 const ProfileCard = ({currentUser}) => {
+  const cloudinaryLink = process.env.REACT_APP_CLOUDINARY_LINK;
+
   const { name, profile_image, username ,description} = currentUser;
   return (
     <div className='profile-card'>
       <div className='image'>
-        <img src={profile_image} alt='profile' className='profile-img'/>
+        <img src={cloudinaryLink+profile_image} alt='profile' className='profile-img'/>
       </div>
       <div className='text-data'>
       <span className='idd text-muted'>{username} <UilEdit className='id' /></span>

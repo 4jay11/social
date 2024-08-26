@@ -17,9 +17,9 @@ const Routee = () => {
     <Router>
       <Routes>
         <Route path="/" element={<App/>} />
-        <Route path="/profile" element={<ProfileSection currentUser={currentUser}/>} />  
+        <Route path="/profile/:id" element={<ProfileSection currentUser={currentUser}/>} />  
         <Route path="/upload" element={<UploadPost />} />
-        <Route path="/pro" element={<Profile currentUser={currentUser} />} />
+        {/* <Route path="/pro" element={<Profile currentUser={currentUser} />} /> */}
         <Route path="/bookmark" element={<Bookmarks currentUser={currentUser}/>} />
         <Route path="/cloudinary" element={<Cloudinary currentUser={currentUser}/>} />
         <Route path="/secure-upload" element={<SecureUpload currentUser={currentUser}/>} />

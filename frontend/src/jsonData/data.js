@@ -21,6 +21,7 @@ export const users = [
         "post_id": "101",
         "image_url":assets.feed1,
         "caption": "Amazing sunset!",
+        "location": "Coimbatore/TamilNadu, India",
         "posted_time": "2024-08-10T12:00:00Z",
         "likes": ["1", "2", "4", "5", "7"],
         "comments": [

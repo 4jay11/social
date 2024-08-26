@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import "./UploadPost.css";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
@@ -10,7 +10,30 @@ const UploadPost = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [cloudImgId, setCloudImgId] = useState(null);
+  const [location, setLocation] = useState('');
 
+
+  useEffect(() => {
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const { latitude, longitude } = position.coords;
+          try {
+            const res = await axios.get(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+            );
+            const { city, principalSubdivision, countryName } = res.data;
+            setLocation(`${city}/${principalSubdivision}, ${countryName}`);
+          } catch (error) {
+            console.error('Error fetching location:', error);
+          }
+        },
+        (error) => {
+          console.error('Error getting geolocation:', error);
+        }
+      );
+    }
+  }, []);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -60,11 +83,13 @@ const UploadPost = () => {
         setImgFile(null);
         setImgPreview(null);
         document.getElementById("imageInput").value = ""; // Clear file input
+        document.getElementById("textarea").value = ""; // Clear file input
         
         const res = await axios.post("http://127.0.0.1:5000/api/users/post", {
           user_id: "1", // Replace with actual user ID
           image_url: imageUrl,
           caption: summary,
+          location:location
         });
 
         console.log("Backend response:", res.data);
@@ -102,6 +127,7 @@ const UploadPost = () => {
         <div className="summary-input-container">
           <textarea
             placeholder="Write a summary..."
+            id="textarea"
             value={summary}
             onChange={handleSummaryChange}
             className="summary-input"

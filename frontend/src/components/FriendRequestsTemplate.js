@@ -5,6 +5,7 @@ import { users } from "../jsonData/data";
 
 const FriendRequestsTemplate = ({currentUser}) => {
   const user = currentUser; // Access the first user's data
+
   const { followRequest, following } = user;
 
   return (
@@ -21,6 +22,7 @@ const FriendRequestsTemplate = ({currentUser}) => {
 
         return (
           <FriendRequests
+          id={requestUser.user_id}
             key={index}
             name={requestUser.name} // Actual user name
             profilePhoto={requestUser.profile_image} // Actual profile photo

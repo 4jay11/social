@@ -1,7 +1,12 @@
 import React from 'react';
 import { assets } from './images/assets';
+import { useNavigate } from 'react-router-dom';
 
-const FriendRequests = ({ profilePhoto, name,mutual }) => {
+const FriendRequests = ({ profilePhoto, name,mutual,id }) => {
+  const navigate = useNavigate();
+  const handleProfileClick = () => {
+    navigate('/profile/'+id);
+  }
   return (
     <div className="friend-requests">
       <div>
@@ -10,7 +15,7 @@ const FriendRequests = ({ profilePhoto, name,mutual }) => {
       <div className="request">
         <div className="info">
           <div className="profile-photo">
-            <img src={profilePhoto} alt="Profile" />
+            <img onClick={handleProfileClick} src={profilePhoto} alt="Profile" />
           </div>
           <div>
             <h5>{name}</h5>

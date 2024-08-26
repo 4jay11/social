@@ -6,5 +6,4 @@ const { getCurrentUser ,getFollowedUsersPosts,getBookmarkedPosts,addNewPost } = 
 router.get('/user/:id', getCurrentUser);
 router.get('/fp/:id', getFollowedUsersPosts);
 router.post('/users/post', addNewPost);
-// router.get('/bookmarks/:id', getBookmarkedPosts);
 module.exports = router;
