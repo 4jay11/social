@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./UploadPost.css";
 import axios from "axios";
 import { ThreeDots } from "react-loader-spinner";
@@ -10,11 +10,10 @@ const UploadPost = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [cloudImgId, setCloudImgId] = useState(null);
-  const [location, setLocation] = useState('');
-
+  const [location, setLocation] = useState("");
 
   useEffect(() => {
-    if ('geolocation' in navigator) {
+    if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
@@ -25,11 +24,11 @@ const UploadPost = () => {
             const { city, principalSubdivision, countryName } = res.data;
             setLocation(`${city}/${principalSubdivision}, ${countryName}`);
           } catch (error) {
-            console.error('Error fetching location:', error);
+            console.error("Error fetching location:", error);
           }
         },
         (error) => {
-          console.error('Error getting geolocation:', error);
+          console.error("Error getting geolocation:", error);
         }
       );
     }
@@ -58,6 +57,7 @@ const UploadPost = () => {
       const { secure_url } = res.data;
 
       if (secure_url) {
+        
         setCloudImgId(secure_url);
         return secure_url;
       } else {
@@ -78,18 +78,21 @@ const UploadPost = () => {
       const imageUrl = await uploadFile();
 
       if (imageUrl) {
-        console.log("SuccessfullyUploadedImage"+imageUrl);
-        
+        //Extract the last part of the URL
+        const parts = imageUrl.split("/");
+        const lastPart = parts.pop();
+        console.log("SuccessfullyUploadedImage" + imageUrl);
+
         setImgFile(null);
         setImgPreview(null);
         document.getElementById("imageInput").value = ""; // Clear file input
-        document.getElementById("textarea").value = ""; // Clear file input
-        
+        document.getElementById("text").value = ""; // Clear file input
+
         const res = await axios.post("http://127.0.0.1:5000/api/users/post", {
           user_id: "1", // Replace with actual user ID
-          image_url: imageUrl,
+          image_url:lastPart,
           caption: summary,
-          location:location
+          location: location,
         });
 
         console.log("Backend response:", res.data);
@@ -127,7 +130,7 @@ const UploadPost = () => {
         <div className="summary-input-container">
           <textarea
             placeholder="Write a summary..."
-            id="textarea"
+            id="text"
             value={summary}
             onChange={handleSummaryChange}
             className="summary-input"
