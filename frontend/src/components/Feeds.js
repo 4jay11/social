@@ -2,13 +2,12 @@ import React, { useEffect } from "react";
 import { assets } from "./images/assets";
 import axios from "axios";
 import FeedTemplate from "./FeedTemplate";
-// import { users } from '../jsonData/data'; // Assuming users is the array of feed data
 import { formatDistanceToNow, parseISO } from "date-fns";
 
 const Feeds = () => {
   const [currentUser, setCurrentUser] = React.useState(null);
   const [followingPosts, setfollowingPosts] = React.useState([]);
-  
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -28,32 +27,20 @@ const Feeds = () => {
   const formatTimeAgo = (postedTime) =>
     formatDistanceToNow(parseISO(postedTime), { addSuffix: true });
 
-  // Get the user at the first index (considered as 'me')
   const me = currentUser || {};
-  // console.log([me]);
-
-  // Get the user IDs of the people 'me' is following
   const followingUserIds = me.following || [];
-
-  // Filter the posts of the user at the first index (me)
   const myPosts = me.posts || [];
-
-  // Filter posts of users that 'me' is following
-  const followingPost = followingPosts || [];
   
-
-  // currentUser and Following User
+  // Filter followingPosts to include only users with posts greater than 0
+  const followingPost = (followingPosts || []).filter(
+    (user) => user.posts && user.posts.length > 0
+  );
   const users = [...[me], ...followingPost];
 
-
-  // Extract the posts from the followingPost array to new array
+  // Extract the posts from the followingPost array to a new array
   const followingP = followingPost?.map((post) => post?.posts?.[0]) || [];
-  // console.log(followingP);
-
-  // Combine both myPosts and followingPosts
   const allPosts = [...myPosts, ...followingP];
 
- 
   return (
     <div className="feeds">
       {allPosts.length > 0 ? (
@@ -62,30 +49,24 @@ const Feeds = () => {
             users.find((user) =>
               user?.posts?.some((p) => p?.post_id === post?.post_id)
             ) || {};
-          // console.log(user);
-          const location = user.posts[index]?.location
-          const { profile_image, name, followers = [] } = user;
 
-          // Find the followers of the posted user who are also being followed by the current user
-          const mutualFollowers =
-            followers.filter((followerId) => followingUserIds.includes(followerId)) || [];
-    
-          // Get profile images of mutual followers
+          const location = user?.posts?.[index]?.location || "Unknown Location";
+          const { profile_image = assets.profile7, name = "Unknown User", followers = [] } = user;
+
+          const mutualFollowers = followers.filter((followerId) =>
+            followingUserIds.includes(followerId)
+          );
+
           const mutualFollowerImages = mutualFollowers.map(
             (followerId) =>
               users.find((user) => user?.user_id === followerId)?.profile_image
           );
-    
-          // Randomly pick a name from mutual followers
+
           const randomFollowerName =
             mutualFollowers.length > 0
               ? users.find((user) => user?.user_id === mutualFollowers[0])?.name
               : "You";
 
-            
-              
-          
-          // Display the like persons only in the following list of the current user and for
           const likedBy =
             post?.likes
               ?.filter((like) => followingUserIds.includes(like))
@@ -93,30 +74,30 @@ const Feeds = () => {
                 (like) =>
                   users.find((user) => user?.user_id === like)?.profile_image
               ) || [];
-         
-          // Filter out the current user's like from the post likes array
+
           const otherLikes = post?.likes?.filter(
-            (id) => id !== currentUser.user_id
+            (id) => id !== currentUser?.user_id
           );
 
-          // If there are other likes, pick a random one
+          // Ensure random selection within valid length
           const randomLikeId =
             otherLikes?.length > 0
-              ? otherLikes[Math.floor(Math.random() * otherLikes.length-1)]
+              ? otherLikes[Math.floor(Math.random() * otherLikes.length)]
               : null;
 
-          // Find the username associated with the randomly selected like
           const likedName = randomLikeId
             ? users.find((user) => user?.user_id === randomLikeId)?.name
             : "You";
 
+            
           return (
             <FeedTemplate
-            user_id={user?.user_id}
-              key={post?.post_id || index} // Use post_id or index as the key
-              profilePhoto={profile_image || assets.profile7}
-              username={name || "Unknown User"}
-              location={location || "Unknown Location"}
+              key={post?.post_id || index}
+              user_id={user?.user_id}
+              post_id={post?.post_id}
+              profilePhoto={profile_image}
+              username={name}
+              location={location}
               timeAgo={
                 post?.posted_time
                   ? formatTimeAgo(post?.posted_time)
@@ -124,7 +105,7 @@ const Feeds = () => {
               }
               feedPhoto={post?.image_url || assets.feed1}
               likedBy={
-                likedBy || [assets.profile6, assets.profile7, assets.profile8]
+                likedBy || []
               }
               likedName={likedName}
               likesCount={post?.likes?.length || 0}
@@ -133,7 +114,7 @@ const Feeds = () => {
               mutualFollowerImages={mutualFollowerImages}
               caption={post?.caption || "No caption"}
               commentsCount={post?.comments?.length || 0}
-              index={index} // Pass the index as a prop
+              index={index}
             />
           );
         })

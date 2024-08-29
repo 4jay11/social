@@ -19,6 +19,22 @@
   --sticky-top-right: -18rem;
 }
 
+
+/* Post update DELETE */
+.edit-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  position: absolute;
+  right: 23rem;
+
+  z-index: 10;
+  background-color: #f0f0f0;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+/*  */
 .bookmark-container {
   display: flex;
   flex-wrap: wrap; /* Allows items to wrap onto the next line */

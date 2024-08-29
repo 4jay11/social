@@ -95,5 +95,58 @@ const addNewPost = async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 };
+// Function to delete a post by ID
+const deletePostById = async (req, res) => {
+  try {
+    const { user_id, post_id } = req.params; // Extract user and post IDs from request parameters
+    const user = await User.findOne({ user_id });
 
-module.exports = { getCurrentUser, getFollowedUsersPosts, addNewPost };
+    
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const postIndex = user.posts.findIndex(post => post.post_id === post_id);
+    if (postIndex === -1) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    user.posts.splice(postIndex, 1); // Remove post from array
+    user.post_count -= 1; // Decrement post count
+    await user.save();
+
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting post:", error);
+    res.status(500).json({ message: "Error deleting post", error });
+  }
+};
+
+// Function to update a post by ID
+const updatePostById = async (req, res) => {
+  try {
+    const { user_id, post_id } = req.params; // Extract user and post IDs from request parameters
+    const { caption } = req.body; // Extract caption from request body
+    const user = await User.findOne({ user_id });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const post = user.posts.find(post => post.post_id === post_id);
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    post.caption = caption; // Update the caption
+    await user.save();
+
+    res.status(200).json({ message: "Post updated successfully", post });
+  } catch (error) {
+    console.error("Error updating post:", error);
+    res.status(500).json({ message: "Error updating post", error });
+  }
+};
+
+
+module.exports = { getCurrentUser, getFollowedUsersPosts, addNewPost, deletePostById, updatePostById };
