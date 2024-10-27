@@ -26,6 +26,7 @@ const FeedTemplate = ({
   const navigate = useNavigate();
   const cloudinaryLink = process.env.REACT_APP_CLOUDINARY_LINK;
 
+  console.log(likedBy);
   
             
   useEffect(() => {
@@ -109,7 +110,8 @@ const FeedTemplate = ({
           <>
             {likedBy.map((photo, index) => (
               <span key={index}>
-                <img src={cloudinaryLink + photo} alt={`Liked by ${index + 1}`} />
+               
+                <img src={process.env.REACT_APP_CLOUDINARY_LINK + photo} />
               </span>
             ))}
             <p>
@@ -120,7 +122,7 @@ const FeedTemplate = ({
           <>
             {mutualFollowerImages.map((photo, index) => (
               <span key={index}>
-                <img src={cloudinaryLink + photo} alt={`Mutual follower ${index + 1}`} />
+                <img src={process.env.REACT_APP_CLOUDINARY_LINK + photo} alt={`Mutual follower ${index + 1}`} />
               </span>
             ))}
             <p>

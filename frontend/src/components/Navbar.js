@@ -27,7 +27,7 @@ const Navbar = ({currentUser}) => {
         <div className="create">
           <label className="btn btn-primary" onClick={handleUploadClick} htmlFor="create-post">Create</label>
           <div className="profile-photo">
-            <img onClick={handleProfileClick} src={currentUser.profile_image} alt="Profile" />
+            <img onClick={handleProfileClick} src={process.env.REACT_APP_CLOUDINARY_LINK+currentUser.profile_image} alt="Profile" />
           </div>
         </div>
       </div>

@@ -67,13 +67,11 @@ const Feeds = () => {
               ? users.find((user) => user?.user_id === mutualFollowers[0])?.name
               : "You";
 
-          const likedBy =
-            post?.likes
-              ?.filter((like) => followingUserIds.includes(like))
-              ?.map(
-                (like) =>
-                  users.find((user) => user?.user_id === like)?.profile_image
-              ) || [];
+              const likedBy = 
+              Array.isArray(post?.likes) && Array.isArray(followingUserIds)
+                ? post.likes.filter((like) => followingUserIds.includes(like))
+                : [];
+            
 
           const otherLikes = post?.likes?.filter(
             (id) => id !== currentUser?.user_id

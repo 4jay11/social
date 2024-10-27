@@ -5,7 +5,7 @@ const BookmarksTemplate = ({ bookmarkPhoto }) => {
   return (
     <div className="book-list">
       <div className="photo">
-        <img src={bookmarkPhoto} alt="Bookmark" />
+        <img src={process.env.REACT_APP_CLOUDINARY_LINK + bookmarkPhoto} alt="Bookmark" />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ import { users } from "../jsonData/data";
 const FriendRequestsTemplate = ({currentUser}) => {
   const user = currentUser; // Access the first user's data
 
-  const { followRequest, following } = user;
+  const { followRequest, following , user_id } = user;
 
   return (
     <div className="friend-requests">
@@ -22,7 +22,10 @@ const FriendRequestsTemplate = ({currentUser}) => {
 
         return (
           <FriendRequests
-          id={requestUser.user_id}
+            id={requestUser.user_id}
+            currentUserId={user_id}
+            followRequest = {requestUser.followRequest}
+            followers = {requestUser.followers}
             key={index}
             name={requestUser.name} // Actual user name
             profilePhoto={requestUser.profile_image} // Actual profile photo
