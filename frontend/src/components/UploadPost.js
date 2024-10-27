@@ -88,7 +88,7 @@ const UploadPost = () => {
         document.getElementById("imageInput").value = ""; // Clear file input
         document.getElementById("text").value = ""; // Clear file input
 
-        const res = await axios.post("http://127.0.0.1:5000/api/users/post", {
+        const res = await axios.post("http://127.0.0.1:8000/api/users/post", {
           user_id: "1", // Replace with actual user ID
           image_url:lastPart,
           caption: summary,

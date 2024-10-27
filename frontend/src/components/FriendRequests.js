@@ -11,7 +11,7 @@ const FriendRequests = ({ currentUserId, profilePhoto, name, mutual, id }) => {
 
   const acceptRequest = async () => {
     try {
-      const response = await axios.post(`http://127.0.0.1:5000/api/${currentUserId}/accept-request`, { requestId: id });
+      const response = await axios.post(`http://127.0.0.1:8000/api/${currentUserId}/accept-request`, { requestId: id });
       console.log('Friend request accepted:', response.data);
     } catch (error) {
       console.error('Error accepting friend request:', error);
@@ -20,7 +20,7 @@ const FriendRequests = ({ currentUserId, profilePhoto, name, mutual, id }) => {
 
   const declineRequest = async () => {
     try {
-      const response = await axios.post(`http://127.0.0.1:5000/api/${currentUserId}/decline-request`, { requestId: id });
+      const response = await axios.post(`http://127.0.0.1:8000/api/${currentUserId}/decline-request`, { requestId: id });
       console.log('Friend request declined:', response.data);
     } catch (error) {
       console.error('Error declining friend request:', error);

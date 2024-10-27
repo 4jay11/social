@@ -11,9 +11,9 @@ const Feeds = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await axios.get(`http://127.0.0.1:5000/api/user/1`);
+        const response = await axios.get(`http://127.0.0.1:8000/api/user/1`);
         setCurrentUser(response.data);
-        const res = await axios.get(`http://127.0.0.1:5000/api/fp/1`);
+        const res = await axios.get(`http://127.0.0.1:8000/api/fp/1`);
         setfollowingPosts(res.data);
       } catch (err) {
         console.error(err.message);

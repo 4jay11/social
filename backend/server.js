@@ -1,19 +1,13 @@
 const express = require('express');
 const connectDB = require('./config/db');
 const userRoutes = require('./routes/postRoutes');
-const cors = require("cors");
+
 const path = require('path');
 
 require('dotenv').config();
 
 const app = express();
-const corsOptions = {
-    origin: "http://localhost:3000", // Allow your frontend origin
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Content-Type,Authorization",
-  };
-  
-app.use(cors(corsOptions));
+
 // Connect to MongoDB
 connectDB();
 
@@ -31,5 +25,5 @@ app.get('*', (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 5000;
+const PORT = 8000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,5 +1,5 @@
 # Use a base image with Node.js
-FROM node:14
+FROM node:18
 
 # Set working directory
 WORKDIR /app
@@ -7,7 +7,7 @@ WORKDIR /app
 # Copy backend files
 COPY backend /app/backend
 
-# Copy frontend build files
+# Copy frontend files (ensure the build is created first)
 COPY frontend/build /app/frontend/build
 
 # Install backend dependencies

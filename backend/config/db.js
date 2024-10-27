@@ -6,7 +6,7 @@ const connectDB = async () => {
     const conn = await mongoose.connect("mongodb+srv://ajayc:ajayc@cluster0.z9jynu3.mongodb.net/", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      dbName: process.env.DB_NAME, // Connect to the specific database
+      dbName: "social", // Connect to the specific database
     });
     console.log('MongoDB connected successfully :'+conn.connection.host);
   } catch (err) {

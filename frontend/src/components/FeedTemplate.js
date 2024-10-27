@@ -40,7 +40,7 @@ const FeedTemplate = ({
   const handleDeletePost = async () => {
     try {
       // Make DELETE request with both user_id and post_id as route parameters
-      await axios.delete(`http://localhost:5000/api/posts/${user_id}/${post_id}`);
+      await axios.delete(`http://localhost:8000/api/posts/${user_id}/${post_id}`);
       alert('Post deleted successfully!');
       // Optionally refresh the feed or remove the post from UI here
     } catch (error) {
@@ -52,7 +52,7 @@ const FeedTemplate = ({
 
   const handleUpdatePost = async () => {
     try {
-      await axios.put(`http://localhost:5000/api/posts/${user_id}/${post_id}`, {
+      await axios.put(`http://localhost:8000/api/posts/${user_id}/${post_id}`, {
         caption: updatedCaption,
       });
       alert('Post updated successfully!');
