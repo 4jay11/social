@@ -53,6 +53,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // Create the model and connect to the specific collection
-const User = mongoose.model('User', userSchema, process.env.COLLECTION_NAME);
+const User = mongoose.model('User', userSchema, 'users');
 
 module.exports = User;
