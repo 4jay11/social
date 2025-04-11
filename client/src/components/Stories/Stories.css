@@ -1,0 +1,72 @@
+/* Middle */
+
+.middle .stories{
+    display:flex;
+    justify-content: space-between;
+    height: 12rem;
+    width: 36rem;
+    gap: 0.5rem;
+}
+
+.middle .stories .story{
+    padding: var(--card-padding);
+    border-radius: var(--card-border-radius);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--color-white);
+    font-size: 0.75rem;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden
+}
+
+.middle .stories .story::before{
+    content: "";
+    display: block;
+    width: 100%;
+    height: 5rem;
+    background:linear-gradient(transparent,black);
+    position: absolute;
+    bottom: 0;
+}
+
+ .middle .stories .story .name{
+    z-index: 2;
+}
+
+
+.middle .stories .profile-photo{
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--border-radius);
+    align-self:self-start;
+    border: 2px solid var(--color-primary);
+}
+
+.middle .stories .profile-photo img{
+    border-radius: var(--border-radius);
+}
+
+
+/* Swiper pagination */
+.swiper-pagination-bullet {
+    background-color: white !important;
+    opacity: 1!important;
+}
+.swiper-pagination-bullet:hover {
+    background-color: #4070f4 !important;
+}
+
+/* Swiper navigation buttons */
+.swiper-button-prev, .swiper-button-next {
+    color: white !important;
+    font-size: 24px !important;
+    transition: 0.3s ease;
+}
+
+.swiper-button-prev:hover, .swiper-button-next:hover {
+    color: #4070f4 !important;
+}
