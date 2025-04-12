@@ -26,12 +26,9 @@ const initializeSocket = (server) => {
     socket.on(
       "sendMessage",
       async ({ username, userId, targetUserId, text }) => {
-        // Save messages to the database
         try {
           const roomId = getSecretRoomId(userId, targetUserId);
-          console.log(username + " " + text);
-
-          // TODO: Check if userId & targetUserId are friends
+          const timestamp = new Date().toISOString();
 
           let chat = await Chat.findOne({
             participants: { $all: [userId, targetUserId] },
@@ -44,20 +41,37 @@ const initializeSocket = (server) => {
             });
           }
 
-          chat.messages.push({
+          const newMessage = {
             senderId: userId,
             text,
-          });
+            createdAt: timestamp,
+          };
 
+          chat.messages.push(newMessage);
           await chat.save();
-          io.to(roomId).emit("messageReceived", { username ,  text });
+
+          const lastMessage = chat.messages[chat.messages.length - 1];
+
+          io.to(roomId).emit("messageReceived", {
+            _id: lastMessage._id,
+            username,
+            text,
+            timestamp,
+          });
         } catch (err) {
-          console.log(err);
+          console.log("Send Message Error:", err);
         }
       }
     );
 
-    socket.on("disconnect", () => {});
+    socket.on("typing", ({ userId, targetUserId }) => {
+      const roomId = getSecretRoomId(userId, targetUserId);
+      socket.to(roomId).emit("typing");
+    });
+
+    socket.on("disconnect", () => {
+      console.log("User disconnected");
+    });
   });
 };
 

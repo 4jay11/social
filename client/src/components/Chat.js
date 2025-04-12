@@ -5,7 +5,7 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { FaCheckCircle } from "react-icons/fa";
 import "./Chat.css";
-import Message from "./Messages";
+import Message from "./Message";
 
 const Chat = () => {
   const user = useSelector((state) => state.auth.user);
@@ -26,6 +26,37 @@ const Chat = () => {
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
+
+  const handledelete = async (id) => {
+    console.log("Delete clicked");
+    console.log(selectedLeft);
+    console.log(selectedRight);
+
+    const deleteForEveryone = selectedLeft.length === 0;
+
+    console.log(id);
+    console.log(deleteForEveryone);
+
+    try {
+      const response = await axios.delete(`${BASE_URL}/deleteChats/${id}`, {
+        withCredentials: true,
+        data: {
+          messageIds: [...selectedLeft, ...selectedRight],
+          deleteForEveryone,
+        },
+      });
+
+      console.log("Delete response:", response.data);
+      // setMessages((prev) =>
+      //   prev.filter(
+      //     (msg) => ![...selectedLeft, ...selectedRight].includes(msg._id)
+      //   )
+      // );
+
+    } catch (error) {
+      console.error("Error deleting chats:", error);
+    }
+  };
 
   const handleSelectToggle = (id, side) => {
     setCheckboxVisible(true);
@@ -76,7 +107,7 @@ const Chat = () => {
 
   useEffect(() => {
     fetchChatMembers();
-  }, [reloadChatMembers]);
+  }, [reloadChatMembers,messages]);
 
   useEffect(() => {
     if (activeFriend?._id) {
@@ -96,20 +127,22 @@ const Chat = () => {
       targetUserId: activeFriend._id,
     });
 
-    socket.on("messageReceived", ({ username, text, timestamp }) => {
+    socket.on("messageReceived", ({ _id, username, text, timestamp }) => {
       const side = username === user.username ? "msg-right" : "msg-left";
-      const id = `msg-${Date.now()}`;
-      setMessages((prev) => [...prev, { id, side, text, timestamp, username }]);
+      setMessages((prev) => [
+        ...prev,
+        { id: _id, side, text, timestamp, username },
+      ]);
     });
 
-    // socket.on("typing", () => {
-    //   setIsFriendTyping(true);
-    //   clearTimeout(typingTimeoutRef.current);
-    //   typingTimeoutRef.current = setTimeout(
-    //     () => setIsFriendTyping(false),
-    //     2000
-    //   );
-    // });
+    socket.on("typing", () => {
+      setIsFriendTyping(true);
+      clearTimeout(typingTimeoutRef.current);
+      typingTimeoutRef.current = setTimeout(
+        () => setIsFriendTyping(false),
+        2000
+      );
+    });
 
     return () => {
       socket.disconnect();
@@ -120,6 +153,7 @@ const Chat = () => {
     if (!newMessage.trim()) return;
 
     const timestamp = new Date().toISOString();
+
     socketRef.current?.emit("sendMessage", {
       username: user.username,
       userId,
@@ -136,10 +170,10 @@ const Chat = () => {
     setNewMessage(e.target.value);
     if (!typing) {
       setTyping(true);
-      // socketRef.current?.emit("typing", {
-      //   userId,
-      //   targetUserId: activeFriend._id,
-      // });
+      socketRef.current?.emit("typing", {
+        userId,
+        targetUserId: activeFriend._id,
+      });
     }
     clearTimeout(typingTimeoutRef.current);
     typingTimeoutRef.current = setTimeout(() => setTyping(false), 1000);
@@ -178,7 +212,12 @@ const Chat = () => {
 
       <div className="chat-main">
         <div className="chat-header">
-          {activeFriend?.username || "Select a friend"}
+          <p> {activeFriend?.username || "Select a friend"}</p>
+          {checkboxVisible && (
+            <button onClick={() => handledelete(activeFriend._id)}>
+              Delete
+            </button>
+          )}
         </div>
         <div className="chat-messages">
           <div className="messages-wrapper">
@@ -189,7 +228,7 @@ const Chat = () => {
                 side={msg.side}
                 text={msg.text}
                 msgusername={msg.username}
-                username = {user.username}
+                username={user.username}
                 timestamp={msg.timestamp}
                 isSelected={
                   msg.side === "msg-left"
