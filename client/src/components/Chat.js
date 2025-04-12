@@ -27,36 +27,35 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
-  const handledelete = async (id) => {
-    console.log("Delete clicked");
-    console.log(selectedLeft);
-    console.log(selectedRight);
+ const handledelete = async (id) => {
+  const deleteForEveryone = selectedLeft.length === 0;
 
-    const deleteForEveryone = selectedLeft.length === 0;
+  try {
+    const response = await axios.delete(`${BASE_URL}/deleteChats/${id}`, {
+      withCredentials: true,
+      data: {
+        messageIds: [...selectedLeft, ...selectedRight],
+        deleteForEveryone,
+      },
+    });
 
-    console.log(id);
-    console.log(deleteForEveryone);
+    console.log("Delete response:", response.data);
 
-    try {
-      const response = await axios.delete(`${BASE_URL}/deleteChats/${id}`, {
-        withCredentials: true,
-        data: {
-          messageIds: [...selectedLeft, ...selectedRight],
-          deleteForEveryone,
-        },
-      });
+    // Just remove from local state without re-fetching all messages
+    setMessages((prevMessages) =>
+      prevMessages.filter(
+        (msg) => ![...selectedLeft, ...selectedRight].includes(msg.id)
+      )
+    );
 
-      console.log("Delete response:", response.data);
-      // setMessages((prev) =>
-      //   prev.filter(
-      //     (msg) => ![...selectedLeft, ...selectedRight].includes(msg._id)
-      //   )
-      // );
+    setSelectedLeft([]);
+    setSelectedRight([]);
+    
+  } catch (error) {
+    console.error("Error deleting chats:", error);
+  }
+};
 
-    } catch (error) {
-      console.error("Error deleting chats:", error);
-    }
-  };
 
   const handleSelectToggle = (id, side) => {
     setCheckboxVisible(true);
@@ -128,7 +127,7 @@ const Chat = () => {
     });
 
     socket.on("messageReceived", ({ _id, username, text, timestamp }) => {
-      const side = username === user.username ? "msg-right" : "msg-left";
+      const side = username === user. username ? "msg-right" : "msg-left";
       setMessages((prev) => [
         ...prev,
         { id: _id, side, text, timestamp, username },
