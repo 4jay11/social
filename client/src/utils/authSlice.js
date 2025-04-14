@@ -20,7 +20,7 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     loginSuccess: (state, action) => {
-      state.user = action.payload; // Store full user object
+      state.user = action.payload;
       state.isAuthenticated = true;
 
       // Persist in localStorage

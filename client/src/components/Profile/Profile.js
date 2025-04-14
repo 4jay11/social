@@ -3,13 +3,19 @@ import "./Profile.css";
 import { assets } from "../images/assets";
 import { UilEdit } from "@iconscout/react-unicons";
 import Navbar from "../Navbar/Navbar";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { loginSuccess } from "../../utils/authSlice";
+import axios from "axios";
+
 const Profile = () => {
-  const currentUser = useSelector((state) => state.auth.user);
-  const [profileImage, setProfileImage] = useState(currentUser.profilePicture);
-  const [description, setDescription] = useState(currentUser.bio);
-  const [name, setName] = useState(currentUser.username);
-  const [username, setUsername] = useState(currentUser.username);
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
+
+  const [currentUser, setCurrentuser] = useState(user);
+  const [profileImage, setProfileImage] = useState(user.profilePicture);
+  const [description, setDescription] = useState(user.bio);
+  const [name, setName] = useState(user.username);
+  const [username, setUsername] = useState(user.username);
   const [isEditing, setIsEditing] = useState(false);
 
   const handleRemoveImage = () => {
@@ -17,7 +23,7 @@ const Profile = () => {
   };
 
   const handleEditToggle = () => {
-    setIsEditing(!isEditing);
+    setIsEditing((prev) => !prev);
   };
 
   const handleDescriptionChange = (e) => {
@@ -31,16 +37,42 @@ const Profile = () => {
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
   };
+
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result); // set the selected image as profile image
+        setProfileImage(reader.result);
       };
       reader.readAsDataURL(file);
     }
   };
+
+  const handleSaveChanges = async () => {
+    try {
+      const updatedData = {
+        profilePicture: profileImage,
+        bio: description,
+        name: name,
+        username: username,
+      };
+
+      const res = await axios.patch(
+        `http://localhost:8000/user/update/${user._id}`,
+        updatedData,
+        { withCredentials: true }
+      );
+
+      // Update Redux and local state
+      dispatch(loginSuccess(res.data));
+      setCurrentuser(res.data);
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Update failed:", err);
+    }
+  };
+
   return (
     <div>
       <Navbar currentUser={currentUser} />
@@ -53,22 +85,20 @@ const Profile = () => {
               <>
                 <input
                   type="file"
-                  id="imageUpload"
                   accept="image/*"
                   onChange={handleImageChange}
                   className="file-input"
                 />
                 <button
-                  onClick={handleRemoveImage}
+                  onClick={handleImageChange}
                   className="remove-image-button"
-                >
-                  Remove Picture
-                </button>
+                >Change Picture</button>
+                
                 <button
-                  onClick={handleEditToggle}
+                  onClick={handleSaveChanges}
                   className="edit-profile-button editing"
                 >
-                  SaveChanges
+                  Save Changes
                 </button>
               </>
             )}
@@ -88,12 +118,6 @@ const Profile = () => {
                   onChange={handleNameChange}
                   className="edit-input"
                 />
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="image-upload-input"
-                />
               </>
             ) : (
               <>
@@ -105,9 +129,8 @@ const Profile = () => {
               </>
             )}
             <div className="profile-stats">
-              <span>Posts: {currentUser?.posts?.length}</span>
-              <span>Following: {currentUser?.following?.length}</span>
-              <span>Followers: {currentUser?.followers?.length}</span>
+              <span>Following: {currentUser?.following?.length || 0}</span>
+              <span>Followers: {currentUser?.followers?.length || 0}</span>
             </div>
           </div>
         </div>

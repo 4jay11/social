@@ -153,6 +153,12 @@ gap: 0.5rem;
   display: flex;
 }
 
+.highlights .feed-pic img{
+  width: 80px;
+  height : 80px;
+  border-radius: 50%;
+}
+
 .feed-pic {
   width: 5rem;
   height: 5rem;

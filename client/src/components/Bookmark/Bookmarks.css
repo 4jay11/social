@@ -27,7 +27,6 @@
   gap: 10px;
   position: absolute;
   right: 23rem;
-
   z-index: 10;
   background-color: #f0f0f0;
   padding: 10px;
@@ -35,23 +34,43 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 /*  */
+
+/* Bookmark page layout */
+.bookmark-page {
+  display: flex; /* Using flex for 2-column layout */
+  height: 100vh; /*Ensure it takes full height*/
+}
+
+/* Sidebar section */
+.bookmark-page .left {
+  width: 100px; /* Sidebar takes 20% width */
+  position: sticky;
+  top: 0; /* Keep it sticky at the top */
+  height: 100vh;
+  margin-left: 20px;
+  background-color: var(--color-light); /* Optional - for sidebar styling */
+}
+
+/* Right content section */
+.bookmark-page .right {
+  width: 90%; /* Content area takes 80% width */
+  padding: 1rem;
+  overflow-y: auto; /* Allow scrolling if content overflows */
+  display: flex;
+  flex-direction: column;
+}
 .bookmark-container {
   display: flex;
-  flex-wrap: wrap; /* Allows items to wrap onto the next line */
+  flex-wrap: wrap;
   width: 80.9%;
   margin: 0 auto;
   align-items: center;
-  
   gap: 0.6rem;
   padding: 0.5rem;
   border-radius: var(--card-border-radius);
-  /* background: var(--color-white); */
-  overflow: hidden; /* Ensures no scrollbars are shown */
+  overflow: hidden; 
 }
 
-.book-title{
-  margin: 5rem 0 0 0;
-}
 
 .bookmarks {
   width: 80%;

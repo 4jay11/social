@@ -11,10 +11,9 @@ import { users } from "./jsonData/data";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { Navigate, useNavigate } from "react-router-dom";
+import StickySidebar from "./components/Sidebar/StickySidebar";
 const App = () => {
-  const response = useSelector((state) => state.auth.user);
-  const [currentUser, setCurrentUser] = React.useState(response);
-  const [followingPosts, setfollowingPosts] = React.useState([]);
+  const currentUser = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
   const handleUpload = () => {
@@ -45,12 +44,11 @@ const App = () => {
             </div>
           </div>
           <div className="right">
-            <Messages />
+            {/* <Messages /> */}
             <FriendRequestsTemplate currentUser={currentUser} />
           </div>
         </div>
       </main>
-      {/* <ThemeCustomizer /> */}
     </div>
   );
 };

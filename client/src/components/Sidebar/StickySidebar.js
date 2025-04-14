@@ -6,18 +6,21 @@ import {
   UilEnvelopeAlt,
   UilBookmarkFull,
 } from "@iconscout/react-unicons";
-import { assets } from "../images/assets";
+
 import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
-import { useSelector } from "react-redux";
 
-const Sidebar = () => {
 
-  const currentUser = useSelector((state) => state.auth.user);
+const StickySidebar = () => {
   const navigate = useNavigate();
   const handleBookmark = () => {
     console.log("Bookmark clicked");
     navigate("/bookmark");
+  };
+
+  const handleHome = () => {
+    console.log("Bookmark clicked");
+    navigate("/feed");
   };
   const handleMessage = () => {
     console.log("Message clicked");
@@ -27,27 +30,16 @@ const Sidebar = () => {
   const handleExplore = () => {
     console.log("Explore clicked");
     navigate("/explore");
-  }
+  };
   return (
     <div>
-      <div className="profile" href="#">
-        <div className="profile-photo">
-          <img src={currentUser.profilePicture} alt="Profile" />
-        </div>
-        <div className="handle">
-          <h4>{currentUser.username}</h4>
-          <p className="text-muted">{currentUser.username} </p>
-        </div>
-      </div>
-
       <div className="sidebar">
-        <div className="menu-item active">
+        <div onClick={handleHome} className="menu-item">
           <span>
             <i>
               <UilHome />
             </i>
           </span>
-          <h3>Home</h3>
         </div>
         <div onClick={handleExplore} className="menu-item">
           <span>
@@ -55,9 +47,8 @@ const Sidebar = () => {
               <UilCompass />
             </i>
           </span>
-          <h3>Explore</h3>
         </div>
-        
+
         <div
           onClick={handleMessage}
           className="menu-item"
@@ -69,7 +60,6 @@ const Sidebar = () => {
               <small className="notification-count">6+</small>
             </i>
           </span>
-          <h3>Messages</h3>
         </div>
         <div onClick={handleBookmark} className="menu-item">
           <span>
@@ -77,12 +67,10 @@ const Sidebar = () => {
               <UilBookmarkFull />
             </i>
           </span>
-          <h3>Bookmarks</h3>
         </div>
-        {/* Add more menu items */}
       </div>
     </div>
   );
 };
 
-export default Sidebar;
+export default StickySidebar;

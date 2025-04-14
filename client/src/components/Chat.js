@@ -6,14 +6,14 @@ import { BASE_URL } from "../utils/constants";
 import { FaCheckCircle } from "react-icons/fa";
 import "./Chat.css";
 import Message from "./Message";
-
+import StickySidebar from "./Sidebar/StickySidebar";
 const Chat = () => {
   const user = useSelector((state) => state.auth.user);
   const userId = user?._id;
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [typing, setTyping] = useState(true);
+  const [typing, setTyping] = useState(false);
   const [isFriendTyping, setIsFriendTyping] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeFriend, setActiveFriend] = useState(null);
@@ -27,35 +27,33 @@ const Chat = () => {
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
 
- const handledelete = async (id) => {
-  const deleteForEveryone = selectedLeft.length === 0;
+  const handledelete = async (id) => {
+    const deleteForEveryone = selectedLeft.length === 0;
 
-  try {
-    const response = await axios.delete(`${BASE_URL}/deleteChats/${id}`, {
-      withCredentials: true,
-      data: {
-        messageIds: [...selectedLeft, ...selectedRight],
-        deleteForEveryone,
-      },
-    });
+    try {
+      const response = await axios.delete(`${BASE_URL}/deleteChats/${id}`, {
+        withCredentials: true,
+        data: {
+          messageIds: [...selectedLeft, ...selectedRight],
+          deleteForEveryone,
+        },
+      });
 
-    console.log("Delete response:", response.data);
+      console.log("Delete response:", response.data);
 
-    // Just remove from local state without re-fetching all messages
-    setMessages((prevMessages) =>
-      prevMessages.filter(
-        (msg) => ![...selectedLeft, ...selectedRight].includes(msg.id)
-      )
-    );
+      // Just remove from local state without re-fetching all messages
+      setMessages((prevMessages) =>
+        prevMessages.filter(
+          (msg) => ![...selectedLeft, ...selectedRight].includes(msg.id)
+        )
+      );
 
-    setSelectedLeft([]);
-    setSelectedRight([]);
-    
-  } catch (error) {
-    console.error("Error deleting chats:", error);
-  }
-};
-
+      setSelectedLeft([]);
+      setSelectedRight([]);
+    } catch (error) {
+      console.error("Error deleting chats:", error);
+    }
+  };
 
   const handleSelectToggle = (id, side) => {
     setCheckboxVisible(true);
@@ -106,7 +104,7 @@ const Chat = () => {
 
   useEffect(() => {
     fetchChatMembers();
-  }, [reloadChatMembers,messages]);
+  }, [reloadChatMembers, messages]);
 
   useEffect(() => {
     if (activeFriend?._id) {
@@ -127,7 +125,7 @@ const Chat = () => {
     });
 
     socket.on("messageReceived", ({ _id, username, text, timestamp }) => {
-      const side = username === user. username ? "msg-right" : "msg-left";
+      const side = username === user.username ? "msg-right" : "msg-left";
       setMessages((prev) => [
         ...prev,
         { id: _id, side, text, timestamp, username },
@@ -187,78 +185,103 @@ const Chat = () => {
   }, [messages]);
 
   return (
-    <div className="chat-wrapper">
-      <div className="chat-sidebar">
-        <input
-          type="text"
-          placeholder="Search friends..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="chat-search"
-        />
-        {filteredFriends.map((friend) => (
-          <div
-            key={friend._id}
-            className={`friend ${
-              activeFriend?._id === friend._id ? "active" : ""
-            }`}
-            onClick={() => setActiveFriend(friend)}
-          >
-            {friend.username}
+    <>
+      <div className="chat-wrapper">
+        <div
+          className="-sidebar"
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            backgroundColor: "#fff",
+            padding: "1rem 0.5rem",
+            width: "100px",
+            height: "100vh",
+            position: "fixed",
+            top: 0,
+            left: 0,
+            zIndex: 10,
+            backgroundColor: "hsl(252, 30%, 95%)",
+          }}
+        >
+          
+          <div className="bookmark">
+            <div className="left">
+              <StickySidebar />
+            </div>
           </div>
-        ))}
-      </div>
-
-      <div className="chat-main">
-        <div className="chat-header">
-          <p> {activeFriend?.username || "Select a friend"}</p>
-          {checkboxVisible && (
-            <button onClick={() => handledelete(activeFriend._id)}>
-              Delete
-            </button>
-          )}
         </div>
-        <div className="chat-messages">
-          <div className="messages-wrapper">
-            {messages.map((msg) => (
-              <Message
-                key={msg.id}
-                id={msg.id}
-                side={msg.side}
-                text={msg.text}
-                msgusername={msg.username}
-                username={user.username}
-                timestamp={msg.timestamp}
-                isSelected={
-                  msg.side === "msg-left"
-                    ? selectedLeft.includes(msg.id)
-                    : selectedRight.includes(msg.id)
-                }
-                checkboxVisible={checkboxVisible}
-                onSelectToggle={handleSelectToggle}
-              />
-            ))}
-            {isFriendTyping && (
-              <div className="typing-indicator">
-                {activeFriend?.username} is typing...
-              </div>
+        <div className="chat-sidebar">
+          <input
+            type="text"
+            placeholder="Search friends..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="chat-search"
+          />
+          {filteredFriends.map((friend) => (
+            <div
+              key={friend._id}
+              className={`friend ${
+                activeFriend?._id === friend._id ? "active" : ""
+              }`}
+              onClick={() => setActiveFriend(friend)}
+            >
+              {friend.username}
+            </div>
+          ))}
+        </div>
+
+        <div className="chat-main">
+          <div className="chat-header">
+            <p> {activeFriend?.username || "Select a friend"}</p>
+            {checkboxVisible && (
+              <button onClick={() => handledelete(activeFriend._id)}>
+                Delete
+              </button>
             )}
           </div>
-          <div ref={messagesEndRef} />
-        </div>
-        <div className="chat-input-area">
-          <input
-            value={newMessage}
-            onChange={handleTyping}
-            className="chat-input"
-            placeholder="Type your message..."
-          />
-          <button onClick={sendMessage} className="chat-send-btn">
-            Send
-          </button>
+          <div className="chat-messages">
+            <div className="messages-wrapper">
+              {messages.map((msg) => (
+                <Message
+                  key={msg.id}
+                  id={msg.id}
+                  side={msg.side}
+                  text={msg.text}
+                  msgusername={msg.username}
+                  username={user.username}
+                  timestamp={msg.timestamp}
+                  isSelected={
+                    msg.side === "msg-left"
+                      ? selectedLeft.includes(msg.id)
+                      : selectedRight.includes(msg.id)
+                  }
+                  checkboxVisible={checkboxVisible}
+                  onSelectToggle={handleSelectToggle}
+                />
+              ))}
+              {isFriendTyping && (
+                <div className="typing-indicator">
+                  {activeFriend?.username} is typing...
+                </div>
+              )}
+            </div>
+            <div ref={messagesEndRef} />
+          </div>
+          <div className="chat-input-area">
+            <input
+              value={newMessage}
+              onChange={handleTyping}
+              className="chat-input"
+              placeholder="Type your message..."
+            />
+            <button onClick={sendMessage} className="chat-send-btn">
+              Send
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 

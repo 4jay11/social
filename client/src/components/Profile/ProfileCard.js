@@ -6,9 +6,16 @@ import {
   UilUserPlus,
   UilUsersAlt,
 } from "@iconscout/react-unicons";
+import { useNavigate } from "react-router-dom";
 
 const ProfileCard = ({ currentUser , posts }) => {
   const cloudinaryLink = process.env.REACT_APP_CLOUDINARY_LINK;
+  const navigate = useNavigate();
+
+  const handleEdit = () => {
+    console.log("Edit button clicked");
+    navigate("/profile")
+  };
 
   // Ensure safe destructuring with fallback values
   const {
@@ -28,7 +35,7 @@ const ProfileCard = ({ currentUser , posts }) => {
       </div>
       <div className="text-data">
         <span className="idd text-muted">
-          {username} <UilEdit className="id" />
+          {username} <UilEdit className="id" onClick={handleEdit} />
         </span>
         <span className="name">{username}</span>
         <span className="oneline">{bio}</span>

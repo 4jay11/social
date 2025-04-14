@@ -113,7 +113,7 @@ storyRouter.get("/getStories", userAuth, async (req, res) => {
         { userId: _id }, // Fetch current user's stories
         { userId: { $in: following } }, // Fetch following users' stories
       ],
-    });
+    }).populate("userId", "username profilePicture");
 
     res.status(200).json(stories);
   } catch (err) {

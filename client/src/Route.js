@@ -18,6 +18,8 @@ import ProtectedRoute from "./utils/ProtectedRoute";
 import StoryView from "./components/Stories/StoryView";
 import { MessagePage } from "./components/Message/MessagePage";
 import Chat from "./components/Chat";
+import Explore from "./components/Explore/Explore";
+
 // import { PostScroll } from "./components/Feed/PostScroll";
 
 const Routee = () => {
@@ -34,6 +36,8 @@ const Routee = () => {
 
         <Route path="/storyView/:id" element={<StoryView />} />
         <Route path="/messagePage" element={<MessagePage />} />
+        <Route path="/explore" element= {<Explore/>} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/chat/:targetUserId?" element={<Chat />} />
         {/* <Route path="/postScroll" element={<PostScroll />} /> */}
 

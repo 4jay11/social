@@ -15,6 +15,7 @@ const ProfileSection = () => {
   const [currentIndex, setCurrentIndex] = useState(null);
   const [showFeedPopup, setShowFeedPopup] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
+  const [stories, setStories] = useState([]);
 
   const { id } = useParams();
 
@@ -27,6 +28,7 @@ const ProfileSection = () => {
         });
         setCurrentUser(response.data.user);
         setPosts(response.data.posts);
+        setStories(response.data.stories);
       } catch (err) {
         console.error("Error fetching user:", err.message);
       }
@@ -72,7 +74,6 @@ const ProfileSection = () => {
   };
 
   const cloudinaryLink = process.env.REACT_APP_CLOUDINARY_LINK;
-  const stories = currentUser?.stories || [];
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % posts.length);
@@ -100,8 +101,8 @@ const ProfileSection = () => {
                   {stories.length > 0 ? (
                     stories.map((story) => (
                       <div className="feed-pic" key={story._id}>
-                        <img
-                          src={`${cloudinaryLink}${story.image}`}
+                        <img 
+                          src={story.image}
                           alt={`Story ${story._id}`}
                         />
                       </div>

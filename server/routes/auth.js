@@ -4,7 +4,8 @@ const express = require("express");
 const authRouter = express.Router();
 const { validateSignUpData } = require("../utils/validate");
 const User = require("../models/User");
-
+const Post = require("../models/Post");
+const Stories = require("../models/Stories");
 // Register Route
 authRouter.post("/register", async (req, res) => {
   try {
@@ -16,6 +17,7 @@ authRouter.post("/register", async (req, res) => {
     if (existingUser)
       return res.status(400).json({ message: "User already registered" });
 
+    
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = new User({
@@ -35,8 +37,12 @@ authRouter.post("/register", async (req, res) => {
     // Set cookie with security options
     res.cookie("token", token, {
       httpOnly: true,
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000),
+      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day from now
+      sameSite: "Lax",
+      secure: false,
+      path: "/",
     });
+
 
     res.status(201).json({ message: "User registered successfully", user });
   } catch (err) {
@@ -50,6 +56,7 @@ authRouter.post("/login", async (req, res) => {
 
   try {
     const user = await User.findOne({ email });
+   
     if (!user) {
       return res.status(401).json({ message: "User not found" });
     }
@@ -65,7 +72,7 @@ authRouter.post("/login", async (req, res) => {
 
     res.cookie("token", token);
 
-    res.json({ message: "Login successful", user });
+    res.json({ message: "Login successful", user  });
   } catch (error) {
     res.status(500).json({ message: "Server error", error });
   }
