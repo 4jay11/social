@@ -7,6 +7,39 @@ const userAuth = require("../middlewares/userAuth");
 const mongoose = require("mongoose");
 const upload = require("../middlewares/multer");
 const cloudinary = require("../config/cloudinary");
+
+
+
+// routes/userRoutes.js
+userRouter.get("/search",userAuth ,  async (req, res) => {
+  const { q } = req.query;
+
+  if (!q || q.trim() === "") {
+    return res.status(400).json({ error: "Search query is required" });
+  }
+
+  try {
+    // First try userId match (startsWith, case-insensitive)
+    let users = await User.find({
+      userId: { $regex: `^${q}`, $options: "i" },
+    }).select("_id userId username profilePicture");
+
+    // If no userId match or less than 5, supplement with username
+    if (users.length < 5) {
+      const extraUsers = await User.find({
+        username: { $regex: q, $options: "i" },
+        _id: { $nin: users.map((u) => u._id) }, // avoid duplicates
+      }).select("_id userId username profilePicture").limit(5 - users.length);
+      users = [...users, ...extraUsers];
+    }
+
+    res.json(users);
+  } catch (err) {
+    console.error("Search error:", err);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 userRouter.get("/bookmark", userAuth, async (req, res) => {
   try {
     const { _id } = req.user;

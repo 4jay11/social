@@ -10,7 +10,7 @@ const Stories = require("../models/Stories");
 authRouter.post("/register", async (req, res) => {
   try {
     validateSignUpData(req.body);
-    const { email, password, username, profileVisibility } = req.body;
+    const { email, password, username, profileVisibility = "public" } = req.body;
 
     // Check if user exists
     const existingUser = await User.findOne({ email });
@@ -28,21 +28,6 @@ authRouter.post("/register", async (req, res) => {
     });
 
     await user.save();
-
-    // Generate JWT token
-    const token = jwt.sign({ _id: user._id }, "secret", {
-      expiresIn: "1d",
-    });
-
-    // Set cookie with security options
-    res.cookie("token", token, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 24 * 60 * 60 * 1000), // 1 day from now
-      sameSite: "Lax",
-      secure: false,
-      path: "/",
-    });
-
 
     res.status(201).json({ message: "User registered successfully", user });
   } catch (err) {

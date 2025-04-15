@@ -23,12 +23,12 @@ const FriendRequests = ({
         {},
         {
           headers: { "Content-Type": "application/json" },
-          withCredentials: true, // Ensure cookies are sent
+          withCredentials: true, 
         }
       );
 
       console.log("Friend request accepted:", response.data);
-      onRequestHandled(requestid); // Remove from UI
+      onRequestHandled(requestid);
     } catch (error) {
       console.error("Error accepting friend request:", error);
     }
@@ -44,7 +44,7 @@ const FriendRequests = ({
         }
       );
       console.log("Friend request declined:", response.data);
-      onRequestHandled(requestid); // Remove from UI
+      onRequestHandled(requestid);
     } catch (error) {
       console.error("Error declining friend request:", error);
     }

@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import FriendRequests from "./FriendRequests";
 import "./FriendRequest.css";
-const FriendRequestsTemplate = ({ currentUser }) => {
+import { useSelector } from "react-redux";
+const FriendRequestsTemplate = () => {
+  const currentUser = useSelector((state) => state.auth.user);
   const [friendRequests, setFriendRequests] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -46,27 +48,26 @@ const FriendRequestsTemplate = ({ currentUser }) => {
 
   return (
     <div className="friend-requests">
-      <h4>Requests</h4>
+      
       {friendRequests.length === 0 ? (
         <p>No friend requests</p>
       ) : (
         friendRequests.map((request) => {
           if (!request.senderId) return null;
 
-          const mutualConnections =
-            request.senderId.following?.filter((id) =>
-              currentUser.following.includes(id)
-            ).length || 0;
+          const mutualConnections = request.senderId.following.filter((id) =>
+            currentUser.following.includes(id)
+          ).length;
 
           return (
             <FriendRequests
               key={request._id}
               requestid={request._id}
-              userid = { request.senderId._id}
+              userid={request.senderId._id}
               username={request.senderId.username}
               profilePhoto={request.senderId.profilePicture}
               mutual={mutualConnections}
-              onRequestHandled={handleRequestAction} // Pass handler function
+              onRequestHandled={handleRequestAction} 
             />
           );
         })

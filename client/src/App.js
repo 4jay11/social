@@ -45,6 +45,7 @@ const App = () => {
           </div>
           <div className="right">
             {/* <Messages /> */}
+            <h4>Requests</h4>
             <FriendRequestsTemplate currentUser={currentUser} />
           </div>
         </div>

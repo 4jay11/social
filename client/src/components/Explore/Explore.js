@@ -125,7 +125,24 @@ const Explore = () => {
                 ✖
               </button>
 
-              <button className="arrow left" onClick={handlePrev}>
+              <button
+                onClick={handlePrev}
+                style={{
+                  position: "absolute",
+                  height: "40px",
+                  width: "40px",
+                  top: "44%",
+                  left: "10px",
+                  transform: "translateY(-50%)",
+                  zIndex: 10,
+                  backgroundColor: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+                  cursor: "pointer",
+                  padding: "6px 0 0 0",
+                }}
+              >
                 <FaArrowLeft />
               </button>
 
@@ -149,7 +166,24 @@ const Explore = () => {
                 onLike={handleLike}
               />
 
-              <button className="arrow right" onClick={handleNext}>
+              <button
+                onClick={handleNext}
+                style={{
+                  position: "absolute",
+                  height: "40px",
+                  width: "40px",
+                  top: "44%",
+                  right: "10px",
+                  transform: "translateY(-50%)",
+                  zIndex: 10,
+                  backgroundColor: "white",
+                  border: "none",
+                  borderRadius: "50%",
+                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+                  cursor: "pointer",
+                  padding: "6px 0 0 0",
+                }}
+              >
                 <FaArrowRight />
               </button>
             </div>

@@ -6,7 +6,9 @@ import {
   Navigate,
 } from "react-router-dom";
 import { useSelector } from "react-redux";
+
 import Login from "./components/Login/Login";
+import Register from "./components/Login/Register"; 
 import App from "./App";
 import UploadPost from "./components/Post/UploadPost";
 import Profile from "./components/Profile/Profile";
@@ -19,7 +21,6 @@ import StoryView from "./components/Stories/StoryView";
 import { MessagePage } from "./components/Message/MessagePage";
 import Chat from "./components/Chat";
 import Explore from "./components/Explore/Explore";
-
 // import { PostScroll } from "./components/Feed/PostScroll";
 
 const Routee = () => {
@@ -33,23 +34,13 @@ const Routee = () => {
           path="/"
           element={!isAuthenticated ? <Login /> : <Navigate to="/feed" />}
         />
-
-        <Route path="/storyView/:id" element={<StoryView />} />
-        <Route path="/messagePage" element={<MessagePage />} />
-        <Route path="/explore" element= {<Explore/>} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/chat/:targetUserId?" element={<Chat />} />
-        {/* <Route path="/postScroll" element={<PostScroll />} /> */}
-
+        <Route
+          path="/login"
+          element={!isAuthenticated ? <Login /> : <Navigate to="/feed" />}
+        />
         <Route
           path="/register"
-          element={
-            !isAuthenticated ? (
-              <div>Register Page</div>
-            ) : (
-              <Navigate to="/feed" />
-            )
-          }
+          element={!isAuthenticated ? <Register /> : <Navigate to="/feed" />}
         />
         <Route
           path="/forgot-password"
@@ -70,6 +61,12 @@ const Routee = () => {
           <Route path="/bookmark" element={<Bookmarks />} />
           <Route path="/cloudinary" element={<Cloudinary />} />
           <Route path="/secure-upload" element={<SecureUpload />} />
+          <Route path="/storyView/:id" element={<StoryView />} />
+          <Route path="/messagePage" element={<MessagePage />} />
+          <Route path="/explore" element={<Explore />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/chat/:targetUserId?" element={<Chat />} />
+          {/* <Route path="/postScroll" element={<PostScroll />} /> */}
         </Route>
 
         {/* Catch-all Route */}

@@ -27,6 +27,15 @@ const authSlice = createSlice({
       localStorage.setItem("user", JSON.stringify(action.payload));
       localStorage.setItem("isAuthenticated", "true");
     },
+    updateFollowing: (state, action) => {
+      const followedUserId = action.payload;
+      if (state.user && !state.user.following.includes(followedUserId)) {
+        state.user.following.push(followedUserId);
+
+        // Sync with localStorage
+        localStorage.setItem("user", JSON.stringify(state.user));
+      }
+    },
 
     logout: (state) => {
       state.user = null;
@@ -39,5 +48,5 @@ const authSlice = createSlice({
   },
 });
 
-export const { loginSuccess, logout } = authSlice.actions;
+export const { loginSuccess, logout, updateFollowing } = authSlice.actions;
 export default authSlice.reducer;

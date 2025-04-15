@@ -54,9 +54,10 @@ chatRouter.delete("/chat/:targetUserId", userAuth, async (req, res) => {
   }
 });
 
+
 chatRouter.delete("/deleteChats/:targetUserId", userAuth, async (req, res) => {
   try {
-    const { messageIds, deleteForEveryone = false } = req.body;
+    const { messageIds  , deleteForEveryone = false } = req.body;
     const currentUserId = req.user._id;
     const targetUserId = req.params.targetUserId;
 

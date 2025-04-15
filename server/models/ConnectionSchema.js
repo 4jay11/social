@@ -28,7 +28,7 @@ ConnectionSchema.pre("save", async function (next) {
   try {
     if (this.senderId.equals(this.receiverId)) {
       return next(
-        new Error("Users cannot send friend requests to themselves.")
+        new Error("Users cannot send friend requests to yourself.")
       );
     }
 

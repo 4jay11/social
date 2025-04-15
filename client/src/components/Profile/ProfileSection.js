@@ -19,6 +19,61 @@ const ProfileSection = () => {
 
   const { id } = useParams();
 
+   const handlePostDelete = async (id) => {
+     try {
+       const res = await axios.delete(
+         `http://localhost:8000/post/deletePost/${id}`,
+         {
+           withCredentials: true,
+           headers: {
+             "Content-Type": "application/json",
+           },
+         }
+       );
+
+       console.log("Post deleted successfully");
+       setPosts((prevPosts) =>
+         prevPosts.filter((post) => post._id !== id)
+       );
+     } catch (err) {
+       console.error("Failed to delete comment:", err.message);
+     }
+  };
+  const handlePostEdit = async (id, text) => {
+    try {
+      const res = await axios.patch(
+        `http://localhost:8000/post/update/${id}`,
+        { caption : text },
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      console.log("Post updated:", res.data);
+
+      // Update the post in the UI
+      setPosts((prevPosts) =>
+        prevPosts.map((post) => {
+          if (post._id === id) {
+            return { ...post, content: text };
+          }
+          return post;
+        })
+      );
+    } catch (err) {
+      console.error(
+        "Failed to edit post:",
+        err.response?.data?.message || err.message
+      );
+    }
+  };
+
+
+
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -101,10 +156,7 @@ const ProfileSection = () => {
                   {stories.length > 0 ? (
                     stories.map((story) => (
                       <div className="feed-pic" key={story._id}>
-                        <img 
-                          src={story.image}
-                          alt={`Story ${story._id}`}
-                        />
+                        <img src={story.image} alt={`Story ${story._id}`} />
                       </div>
                     ))
                   ) : (
@@ -150,8 +202,24 @@ const ProfileSection = () => {
                   ✖
                 </button>
 
-                {/* Prev and Next Arrows */}
-                <button className="arrow left" onClick={handlePrev}>
+                <button
+                  onClick={handlePrev}
+                  style={{
+                    position: "absolute",
+                    height: "40px",
+                    width: "40px",
+                    top: "44%",
+                    left: "10px",
+                    transform: "translateY(-50%)",
+                    zIndex: 10,
+                    backgroundColor: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+                    cursor: "pointer",
+                    padding: "6px 0 0 0",
+                  }}
+                >
                   <FaArrowLeft />
                 </button>
 
@@ -174,9 +242,29 @@ const ProfileSection = () => {
                   caption={selectedPost.content || "No caption"}
                   onBookmark={handleBookmark}
                   onLike={handleLike}
+                  editable={true}
+                  handlePostDelete={handlePostDelete}
+                  handlePostEdit={handlePostEdit}
                 />
 
-                <button className="arrow right" onClick={handleNext}>
+                <button
+                  onClick={handleNext}
+                  style={{
+                    position: "absolute",
+                    height: "40px",
+                    width: "40px",
+                    top: "44%",
+                    right: "10px",
+                    transform: "translateY(-50%)",
+                    zIndex: 10,
+                    backgroundColor: "white",
+                    border: "none",
+                    borderRadius: "50%",
+                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
+                    cursor: "pointer",
+                    padding: "6px 0 0 0",
+                  }}
+                >
                   <FaArrowRight />
                 </button>
               </div>

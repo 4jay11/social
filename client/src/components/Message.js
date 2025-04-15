@@ -55,7 +55,7 @@ const Message = ({
           </div>
 
           <div className="dots-dropdown-wrapper">
-            <div className="three-dots-wrapper" >
+            <div className="three-dots-wrapper" onClick={toggleDropdown}>
               <div className="three-dots">
                 <span />
                 <span />

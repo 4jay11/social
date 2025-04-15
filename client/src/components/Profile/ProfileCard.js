@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./ProfileSection.css";
 import {
   UilEdit,
@@ -6,18 +6,60 @@ import {
   UilUserPlus,
   UilUsersAlt,
 } from "@iconscout/react-unicons";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { updateFollowing } from "../../utils/authSlice";
 
-const ProfileCard = ({ currentUser , posts }) => {
-  const cloudinaryLink = process.env.REACT_APP_CLOUDINARY_LINK;
+
+const ProfileCard = ({ currentUser, posts }) => {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.auth.user);
 
-  const handleEdit = () => {
-    console.log("Edit button clicked");
-    navigate("/profile")
+  // check if current logged-in user is already following the profile user
+  const isFollowing = user?.following?.includes(id);
+  const [following, setFollowing] = useState(isFollowing);
+
+  useEffect(() => {
+    setFollowing(isFollowing);
+  }, [currentUser, user]);
+
+  const handleMessage = (id) => {
+    navigate(`/chat/${id}`);
   };
 
-  // Ensure safe destructuring with fallback values
+  const handleFollow = async () => {
+    try {
+      const response = await axios.post(
+        `http://localhost:8000/connection/request/${currentUser._id}`,
+        {}, 
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.status == 200 || response.status == 201) {
+        setFollowing((prev) => !prev);
+        dispatch(updateFollowing(currentUser._id));
+      }
+      console.log("Connection Request Sent:", response.data);
+    } catch (error) {
+      console.error(
+        "Error sending connection request:",
+        error.response?.data || error.message
+      );
+    }
+  };
+
+  const handleEdit = () => {
+    navigate("/profile");
+  };
+
   const {
     username = "Unknown",
     bio = "No bio available",
@@ -27,23 +69,28 @@ const ProfileCard = ({ currentUser , posts }) => {
   return (
     <div className="profile-card">
       <div className="image">
-        <img
-          src={profilePicture}
-          alt="profile"
-          className="profile-img"
-        />
+        <img src={profilePicture} alt="profile" className="profile-img" />
       </div>
       <div className="text-data">
         <span className="idd text-muted">
-          {username} <UilEdit className="id" onClick={handleEdit} />
+          {username}{" "}
+          {id === user?._id && <UilEdit className="id" onClick={handleEdit} />}
         </span>
         <span className="name">{username}</span>
         <span className="oneline">{bio}</span>
       </div>
-      <div className="buttons">
-        <button className="button">Follow</button>
-        <button className="button">Message</button>
-      </div>
+
+      {id !== user?._id && (
+        <div className="buttons">
+          <button className="button" onClick={() => handleMessage(id)}>
+            Message
+          </button>
+          <button className="button" onClick={handleFollow}>
+            {following ? "Following" : "Follow"}
+          </button>
+        </div>
+      )}
+
       <div className="stats">
         <div className="data">
           <i>

@@ -4,12 +4,17 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { FaCheckCircle } from "react-icons/fa";
+import { BsThreeDotsVertical } from "react-icons/bs";
 import "./Chat.css";
 import Message from "./Message";
 import StickySidebar from "./Sidebar/StickySidebar";
+import { useNavigate, useParams } from "react-router-dom";
 const Chat = () => {
   const user = useSelector((state) => state.auth.user);
   const userId = user?._id;
+  const navigate = useNavigate();
+  const { targetUserId } = useParams();
+  console.log("Chat user id:", targetUserId);
 
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -22,7 +27,14 @@ const Chat = () => {
   const [selectedLeft, setSelectedLeft] = useState([]);
   const [selectedRight, setSelectedRight] = useState([]);
   const [checkboxVisible, setCheckboxVisible] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
+  const handleClearChat = () => {
+    console.log("Chat cleared!");
+    setShowMenu(false);
+  };
+
+  //  console.log(activeFriend);
   const socketRef = useRef(null);
   const messagesEndRef = useRef(null);
   const typingTimeoutRef = useRef(null);
@@ -85,32 +97,62 @@ const Chat = () => {
 
   const fetchChatMessages = async (targetUserId) => {
     try {
-      const chat = await axios.get(`${BASE_URL}/chat/${targetUserId}`, {
+      const res = await axios.get(`${BASE_URL}/chat/${targetUserId}`, {
         withCredentials: true,
       });
-      const chatMessages = chat?.data?.messages.map((msg, i) => ({
+
+      const chat = res.data;
+
+      const chatMessages = chat?.messages.map((msg) => ({
         id: msg._id,
         side: msg.senderId?._id === userId ? "msg-right" : "msg-left",
         text: msg.text,
         timestamp: msg.createdAt,
         username: msg.senderId?.username,
       }));
+
       setMessages(chatMessages);
+
+      return chat;
     } catch (error) {
       console.error("Failed to fetch messages:", error);
       setMessages([]);
+      return null;
     }
   };
 
   useEffect(() => {
     fetchChatMembers();
-  }, [reloadChatMembers, messages]);
+  }, [reloadChatMembers]);
 
   useEffect(() => {
-    if (activeFriend?._id) {
-      fetchChatMessages(activeFriend._id);
-    }
-  }, [activeFriend]);
+    const handleChat = async () => {
+      if (targetUserId && chatMembers.length >= 0) {
+        const friend = chatMembers.find(
+          (member) => member._id === targetUserId
+        );
+
+        if (friend) {
+          setActiveFriend(friend);
+          fetchChatMessages(friend._id);
+        } else {
+          const chat = await fetchChatMessages(targetUserId);
+
+          // Extract the participant
+          const otherUser = chat?.participants?.find(
+            (user) => user._id !== userId
+          );
+
+          if (otherUser) {
+            setChatMembers((prev) => [...prev, otherUser]);
+            setActiveFriend(otherUser);
+          }
+        }
+      }
+    };
+
+    handleChat();
+  }, [targetUserId, chatMembers]);
 
   useEffect(() => {
     if (!userId || !activeFriend?._id) return;
@@ -142,9 +184,9 @@ const Chat = () => {
     });
 
     return () => {
-      socket.disconnect();
+      socket.disconnect(); // ✅ Clean up on unmount or re-run
     };
-  }, [userId, activeFriend]);
+  }, [userId, activeFriend?._id]);
 
   const sendMessage = () => {
     if (!newMessage.trim()) return;
@@ -176,8 +218,11 @@ const Chat = () => {
     typingTimeoutRef.current = setTimeout(() => setTyping(false), 1000);
   };
 
-  const filteredFriends = chatMembers.filter((f) =>
-    f.username.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredFriends = chatMembers.filter(
+    (f) =>
+      f &&
+      f.username &&
+      f.username.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   useEffect(() => {
@@ -203,7 +248,6 @@ const Chat = () => {
             backgroundColor: "hsl(252, 30%, 95%)",
           }}
         >
-          
           <div className="bookmark">
             <div className="left">
               <StickySidebar />
@@ -222,9 +266,16 @@ const Chat = () => {
             <div
               key={friend._id}
               className={`friend ${
-                activeFriend?._id === friend._id ? "active" : ""
+                targetUserId === friend._id ? "active" : ""
               }`}
-              onClick={() => setActiveFriend(friend)}
+              onClick={() => {
+                setActiveFriend(friend);
+                setMessages([]);
+                setSelectedLeft([]);
+                setSelectedRight([]);
+                setCheckboxVisible(false);
+                navigate(`/chat/${friend._id}`);
+              }}
             >
               {friend.username}
             </div>
@@ -239,6 +290,51 @@ const Chat = () => {
                 Delete
               </button>
             )}
+            <FaCheckCircle />
+            <div
+              style={{ position: "relative", width: "100%", height: "100%" }}
+            >
+              <BsThreeDotsVertical
+                onClick={() => setShowMenu((prev) => !prev)}
+                style={{
+                  position: "absolute",
+                  top: "5px",
+                  right: "10px",
+                  cursor: "pointer",
+                  color: "#555",
+                  fontSize: "20px",
+                }}
+              />
+              {showMenu && (
+                <div
+                  style={{
+                    position: "absolute",
+                    width: "125px",
+                    top: "35px",
+                    right: "10px",
+                    background: "#fff",
+                    border: "1px solid #ddd",
+                    borderRadius: "5px",
+                    boxShadow: "0px 2px 6px rgba(0,0,0,0.15)",
+                    zIndex: 10,
+                  }}
+                >
+                  <div
+                    onClick={handleClearChat}
+                    style={{
+                      padding: "8px 12px",
+                      cursor: "pointer",
+                      color: "#e63946",
+                      whiteSpace: "nowrap",
+                    }}
+                  >
+                    
+                      Clear Chat
+                
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
           <div className="chat-messages">
             <div className="messages-wrapper">

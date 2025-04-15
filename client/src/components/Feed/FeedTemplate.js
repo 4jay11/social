@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
- import { FaTrashAlt } from "react-icons/fa";
+ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import {
   UilBookmarkFull,
   UilHeart,
@@ -24,6 +24,10 @@ const FeedTemplate = ({
   onLike,
   onBookmark,
   bookmarkBy = [],
+  editable = false,
+  handlePostDelete,
+  handlePostEdit,
+  
 }) => {
   const navigate = useNavigate();
   const userId = useSelector((state) => state.auth.user?._id);
@@ -33,6 +37,13 @@ const FeedTemplate = ({
   const [showHighlight, setShowHighlight] = useState(false);
   const [expandedComments, setExpandedComments] = useState({});
   const [comments, setComments] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedCaption, setEditedCaption] = useState(caption);
+
+  const handleUpdate = () => {
+    handlePostEdit(post_id, editedCaption); 
+    setIsEditing(false); 
+  };
 
   const handleCommentSubmit = async (postId) => {
     if (!newComment.trim()) return;
@@ -80,7 +91,6 @@ const FeedTemplate = ({
       console.error("Failed to delete comment:", err.message);
     }
   };
-
 
   const fetchComments = async (id) => {
     try {
@@ -162,13 +172,33 @@ const FeedTemplate = ({
             style={{ cursor: "pointer" }}
           />
         </div>
-        <div className="bookmark">
+        <div
+          className="bookmark"
+          style={{ display: "flex", gap: "10px", padding: "5px 0" }}
+        >
           <UilBookmarkFull
             color="black"
             fill={hasBookmarked ? "red" : "black"}
             onClick={() => onBookmark(post_id)}
             style={{ cursor: "pointer" }}
           />
+          {editable && (
+            <FaTrashAlt
+              style={{ cursor: "pointer" }}
+              onClick={() => handlePostDelete(post_id)}
+            />
+          )}
+          {editable && !isEditing && (
+            <FaEdit
+              style={{
+                cursor: "pointer",
+                // color: "#555",
+                fontSize: "24px",
+                // marginTop: "6px",
+              }}
+              onClick={() => setIsEditing(true)}
+            />
+          )}
         </div>
       </div>
 
@@ -193,9 +223,64 @@ const FeedTemplate = ({
         )}
       </div>
 
-      <div className="caption">
-        <p>{caption}</p>
-      </div>
+      {editable == true ? <div className="caption">
+        {isEditing ? (
+          <div>
+            <textarea
+              value={editedCaption}
+              onChange={(e) => setEditedCaption(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "8px",
+                fontSize: "14px",
+                borderRadius: "6px",
+                border: "1px solid #ccc",
+                resize: "vertical",
+                fontFamily: "inherit",
+              }}
+            />
+            <button
+              onClick={handleUpdate}
+              style={{
+                marginTop: "8px",
+                padding: "6px 12px",
+                backgroundColor: "#007bff",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Update
+            </button>
+            <button
+              onClick={() => setIsEditing(false)}
+              style={{
+                marginTop: "8px",
+                marginLeft: "8px",
+                padding: "6px 12px",
+                backgroundColor: "#dc3545",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        ) : (
+          <p style={{ fontSize: "14px", marginBottom: "6px" }}>
+            {editedCaption}
+          </p>
+        )}
+      </div> : (
+        <div className="caption">
+          <p style={{ fontSize: "14px", marginBottom: "6px" }}>
+            {caption}
+          </p>
+        </div>
+      )}
 
       <div
         className="comments text-muted"
@@ -207,87 +292,84 @@ const FeedTemplate = ({
     </div>
   );
 
+  const renderComments = () => (
+    <div className="right-comments">
+      <div className="top-comments">
+        <h3>Comments</h3>
+      </div>
+      <div className="comments-scrollable">
+        <div className="comments-section">
+          {comments.map((comment) => {
+            const text = comment?.text || ""; 
+            const isLong = text.length > 60;
+            const isExpanded = expandedComments[comment._id];
 
+            return (
+              <>
+                <div
+                  className="comment"
+                  key={comment._id}
+                  style={{ position: "relative" }}
+                >
+                  <img
+                    className="comment-img"
+                    src={comment.userId?.profilePicture}
+                    alt={comment.userId?.username}
+                  />
+                  <div className="comment-content">
+                    <strong>{comment.userId?.username} </strong>
+                    {isLong && !isExpanded ? `${text.slice(0, 60)}... ` : text}
+                    {isLong && (
+                      <span
+                        onClick={() =>
+                          setExpandedComments((prev) => ({
+                            ...prev,
+                            [comment._id]: !prev[comment._id],
+                          }))
+                        }
+                        style={{
+                          color: "#007bff",
+                          cursor: "pointer",
+                          marginLeft: "6px",
+                        }}
+                      >
+                        {isExpanded ? "Show Less" : "Show More"}
+                      </span>
+                    )}
+                  </div>
 
- const renderComments = () => (
-   <div className="right-comments">
-     <div className="top-comments">
-       <h3>Comments</h3>
-     </div>
-     <div className="comments-scrollable">
-       <div className="comments-section">
-         {comments.map((comment) => {
-           const text = comment?.text || ""; // Fallback to empty string
-           const isLong = text.length > 60;
-           const isExpanded = expandedComments[comment._id];
-
-           return (
-             <>
-               <div
-                 className="comment"
-                 key={comment._id}
-                 style={{ position: "relative" }}
-               >
-                 <img
-                   className="comment-img"
-                   src={comment.userId?.profilePicture}
-                   alt={comment.userId?.username}
-                 />
-                 <div className="comment-content">
-                   <strong>{comment.userId?.username} </strong>
-                   {isLong && !isExpanded ? `${text.slice(0, 60)}... ` : text}
-                   {isLong && (
-                     <span
-                       onClick={() =>
-                         setExpandedComments((prev) => ({
-                           ...prev,
-                           [comment._id]: !prev[comment._id],
-                         }))
-                       }
-                       style={{
-                         color: "#007bff",
-                         cursor: "pointer",
-                         marginLeft: "6px",
-                       }}
-                     >
-                       {isExpanded ? "Show Less" : "Show More"}
-                     </span>
-                   )}
-                 </div>
-
-                 {/* Show Delete Icon only if comment's userId matches current user */}
-                 {comment.userId?._id === userId && (
-                   <div
-                     className="deleteIcon"
-                     onClick={() => handleDelete(comment._id)}
-                   >
-                     <FaTrashAlt />
-                   </div>
-                 )}
-               </div>
-             </>
-           );
-         })}
-       </div>
-     </div>
-     <div className="comment-box">
-       <textarea
-         placeholder="Write a comment..."
-         rows="3"
-         className="comment-input"
-         value={newComment}
-         onChange={(e) => setNewComment(e.target.value)}
-       ></textarea>
-       <button
-         className="comment-submit"
-         onClick={() => handleCommentSubmit(post_id)}
-       >
-         Post
-       </button>
-     </div>
-   </div>
- );
-
+                  {/* Show Delete Icon only if comment's userId matches current user */}
+                  {comment.userId?._id === userId && (
+                    <div
+                      className="deleteIcon"
+                      onClick={() => handleDelete(comment._id)}
+                    >
+                      <FaTrashAlt />
+                    </div>
+                  )}
+                </div>
+              </>
+            );
+          })}
+        </div>
+      </div>
+      <div className="comment-box">
+        <textarea
+          placeholder="Write a comment..."
+          rows="3"
+          className="comment-input"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+        ></textarea>
+        <button
+          className="comment-submit"
+          onClick={() => handleCommentSubmit(post_id)}
+        >
+          Post
+        </button>
+      </div>
+    </div>
+  );
 
   return (
     <>

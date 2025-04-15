@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./Login.css";
-import { useDispatch, useSelector } from "react-redux";
-import { loginSuccess } from "../../utils/authSlice";
-import { useNavigate , Link} from "react-router-dom";
 
-const Login = () => {
+import { useNavigate , Link } from "react-router-dom";
+
+const Register = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [username, setUserName] = useState("");
   const [error, setError] = useState("");
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/feed");
-    }
-  }, [isAuthenticated, navigate]);
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,8 +18,8 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8000/login",
-        { email, password },
+        "http://localhost:8000/register",
+        { username, email, password },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -34,20 +27,25 @@ const Login = () => {
       );
 
       console.log("Response:", response);
-
-      dispatch(loginSuccess(response.data.user));
-      
-      navigate("/feed");
+      navigate("/login");
     } catch (err) {
       setError(
-        err.response?.data?.message || "Login failed. Please try again."
+        err.response?.data?.message || "Register failed. Please try again."
       );
     }
   };
 
   return (
     <div className="login-wrapper">
-      <h1>Login</h1>
+      <h1>Register</h1>
+      <div className="login-input-box">
+        <input
+          type="username"
+          placeholder="Username"
+          value={username}
+          onChange={(e) => setUserName(e.target.value)}
+        />
+      </div>
       <div className="login-input-box">
         <input
           type="email"
@@ -76,11 +74,11 @@ const Login = () => {
 
       <div className="login-register">
         <p>
-          Don't have an account? <Link to="/register">Register</Link>
+          Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

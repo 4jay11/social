@@ -37,31 +37,41 @@ connectionRouter.post("/request/:receiverId", userAuth, async (req, res) => {
     if (!receiverId) {
       return res.status(400).json({ error: "Receiver ID is required." });
     }
-    if (senderId === receiverId) {
-      return res.status(400).json({ error: "You cannot send a request to yourself." });
+    if (senderId.toString() === receiverId.toString()) {
+      return res
+        .status(400)
+        .json({ error: "You cannot send a request to yourself." });
     }
 
-    // Check if a request already exists in any direction
-    const existingRequest = await Connection.findOne({
+    // Check if a connection already exists in either direction
+    const existingConnection = await Connection.findOne({
+      senderId,
+      receiverId,
+    });
+
+    if (existingConnection) {
+      if (existingConnection.status === "pending") {
+        return res
+          .status(400)
+          .json({ error: "A connection request is already pending." });
+      }
+      if (existingConnection.status === "accepted") {
+        return res.status(400).json({ error: "You are already connected." });
+      }
+    }
+
+    // Create a new connection request
+    const connection = new Connection({
       senderId,
       receiverId,
       status: "pending",
     });
 
-    if (existingRequest) {
-      return res.status(400).json({ error: "A pending request already exists." });
-    }
-
-    // Create a new connection request (A → B, pending)
-    const connection = new Connection({
-      senderId,
-      receiverId,
-      status: "pending", // Status is pending until accepted
-    });
-
     await connection.save();
 
-    return res.status(201).json({ message: "Connection request sent.", connection });
+    return res
+      .status(201)
+      .json({ message: "Connection request sent.", connection });
   } catch (error) {
     console.error("Error sending connection request:", error);
     res.status(500).json({ error: error.message });
