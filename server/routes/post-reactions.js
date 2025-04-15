@@ -72,6 +72,7 @@ postReactionRouter.post("/comment/:postId", userAuth, async (req, res) => {
     // Create and save the comment
     const newComment = new Comment({ postId, userId, text });
     await newComment.save();
+    newComment.populate("userId", "username profilePicture");
 
     // Add the comment ID to the post's comments array
     await Post.findByIdAndUpdate(postId, {
@@ -80,7 +81,7 @@ postReactionRouter.post("/comment/:postId", userAuth, async (req, res) => {
 
     res
       .status(201)
-      .json({ message: "Comment added.", commentId: newComment._id });
+      .json({ message: "Comment added.", comment: newComment });
   } catch (err) {
     res.status(500).json({ message: "Something went wrong." });
   }
@@ -160,5 +161,8 @@ postReactionRouter.post("/bookmark/:postId", userAuth, async (req, res) => {
     res.status(500).json({ message: "Something went wrong." });
   }
 });
+
+
+
 
 module.exports = postReactionRouter;

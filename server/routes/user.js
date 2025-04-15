@@ -5,7 +5,8 @@ const Bookmark = require("../models/bookmarks");
 const Stories = require("../models/Stories");
 const userAuth = require("../middlewares/userAuth");
 const mongoose = require("mongoose");
-
+const upload = require("../middlewares/multer");
+const cloudinary = require("../config/cloudinary");
 userRouter.get("/bookmark", userAuth, async (req, res) => {
   try {
     const { _id } = req.user;
@@ -58,30 +59,51 @@ userRouter.get("/:id", userAuth, async (req, res) => {
   }
 });
 
-userRouter.patch("/update/:id", userAuth, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { bio, profilePicture, username } = req.body;
 
-    if (!mongoose.Types.ObjectId.isValid(id))
-      return res.status(400).json({ message: "Invalid user ID." });
+userRouter.patch(
+  "/update/:id",
+  userAuth,
+  upload.single("image"),
+  async (req, res) => {
+    try {
+      const { id } = req.params;
 
-    const user = await User.findById(id);
-    if (!user) return res.send("User not found");
-    
-    const updatedUser = await User.findByIdAndUpdate(
-      id,
-      { bio, profilePicture, username },
-      { new: true }
-    );
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        return res.status(400).json({ message: "Invalid user ID." });
+      }
 
-    if (!updatedUser) return res.send("User not updated");
+      const user = await User.findById(id);
+      if (!user) return res.status(404).json({ message: "User not found." });
 
-    // Convert to plain object before adding custom field
-    res.send({ user: updatedUser });
-  } catch (err) {
-    res.send(err.message);
+      const updatedFields = {};
+
+      if (req.body.bio) updatedFields.bio = req.body.bio;
+      if (req.body.username) updatedFields.username = req.body.username;
+
+      // Handle image upload if file exists
+      if (req.file) {
+        const result = await cloudinary.uploader.upload(req.file.path);
+        updatedFields.profilePicture = result.secure_url;
+      } 
+
+      // Only update if at least one field is provided
+      if (Object.keys(updatedFields).length === 0) {
+        return res
+          .status(400)
+          .json({ message: "No valid fields provided for update." });
+      }
+
+      const updatedUser = await User.findByIdAndUpdate(id, updatedFields, {
+        new: true,
+      });
+
+      return res.status(200).json(updatedUser);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: err.message });
+    }
   }
-});
+);
+
 
 module.exports = userRouter;

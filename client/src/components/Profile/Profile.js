@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import "./Profile.css";
 import { assets } from "../images/assets";
 import { UilEdit } from "@iconscout/react-unicons";
@@ -12,15 +12,16 @@ const Profile = () => {
   const user = useSelector((state) => state.auth.user);
 
   const [currentUser, setCurrentuser] = useState(user);
-  const [profileImage, setProfileImage] = useState(user.profilePicture);
+  const [profileImage, setProfileImage] = useState(
+    user.profilePicture || assets.profile7
+  );
   const [description, setDescription] = useState(user.bio);
   const [name, setName] = useState(user.username);
   const [username, setUsername] = useState(user.username);
   const [isEditing, setIsEditing] = useState(false);
+  const [file, setFile] = useState(null); // store original file
 
-  const handleRemoveImage = () => {
-    setProfileImage(assets.profile7);
-  };
+  const fileInputRef = useRef(null);
 
   const handleEditToggle = () => {
     setIsEditing((prev) => !prev);
@@ -41,30 +42,42 @@ const Profile = () => {
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
+      setFile(file); // save original file for FormData
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result);
+        setProfileImage(reader.result); // just for preview
       };
       reader.readAsDataURL(file);
     }
   };
 
+  const handleFileButtonClick = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   const handleSaveChanges = async () => {
     try {
-      const updatedData = {
-        profilePicture: profileImage,
-        bio: description,
-        name: name,
-        username: username,
-      };
+      const formData = new FormData();
+      if (file) {
+        formData.append("image", file);
+      }
+      formData.append("bio", description);
+      formData.append("name", name);
+      formData.append("username", username);
 
       const res = await axios.patch(
         `http://localhost:8000/user/update/${user._id}`,
-        updatedData,
-        { withCredentials: true }
+        formData,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
       );
 
-      // Update Redux and local state
       dispatch(loginSuccess(res.data));
       setCurrentuser(res.data);
       setIsEditing(false);
@@ -86,14 +99,17 @@ const Profile = () => {
                 <input
                   type="file"
                   accept="image/*"
+                  ref={fileInputRef}
+                  style={{ display: "none" }}
                   onChange={handleImageChange}
-                  className="file-input"
                 />
                 <button
-                  onClick={handleImageChange}
-                  className="remove-image-button"
-                >Change Picture</button>
-                
+                  onClick={handleFileButtonClick}
+                  className="change-image-button"
+                >
+                  Change Picture
+                </button>
+
                 <button
                   onClick={handleSaveChanges}
                   className="edit-profile-button editing"
@@ -103,6 +119,7 @@ const Profile = () => {
               </>
             )}
           </div>
+
           <div className="profile-info">
             {isEditing ? (
               <>
@@ -134,6 +151,7 @@ const Profile = () => {
             </div>
           </div>
         </div>
+
         <div className="profile-body">
           <h2>About</h2>
           {isEditing ? (

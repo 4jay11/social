@@ -331,6 +331,30 @@ body.modal-open {
   background-color: #2980b9;
 }
 
+/* Default state for delete icon - hidden */
+.deleteIcon {
+  display: none; /* Hidden by default */
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #d9534f;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+/* Show delete icon when comment is hovered */
+.comment:hover .deleteIcon {
+  display: block; /* Show delete icon */
+}
+
+.deleteIcon:hover svg {
+  color: #c9302c; /* Darker red on hover */
+}
+
+
+
 /* -----------------Responsive Styles-------------------------- */
 @media (max-width: 768px) {
   .overlay-content {

@@ -99,6 +99,19 @@ postRouter.patch("/update/:post_id", userAuth, async (req, res) => {
   }
 });
 
+
+postRouter.get("/comments/:postId", userAuth, async (req, res) => {
+  try {
+    const { postId } = req.params;
+    const comments = await Comment.find({ postId }).populate("userId" , "username profilePicture");
+    res.json(comments);
+  } catch (err) {
+    res
+      .status(500)
+      .json({ message: "Something went wrong.", error: err.message });
+  }
+});
+
 postRouter.get("/post-generator", userAuth, async (req, res) => {
   try {
     const { _id, following } = req.user;
