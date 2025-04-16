@@ -1,10 +1,10 @@
-
 import React from "react";
-import "./StoryShimmer.css"; 
+import "./StoryShimmer.css";
 
 const ShimmerStory = () => {
   return (
-    <div className="shimmer-story">
+    <div className="stories">
+      <div className="shimmer-story"></div>
     </div>
   );
 };

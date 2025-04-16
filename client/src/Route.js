@@ -42,6 +42,7 @@ const Routee = () => {
           path="/register"
           element={!isAuthenticated ? <Register /> : <Navigate to="/feed" />}
         />
+        
         <Route
           path="/forgot-password"
           element={
