@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import "./Bookmarks.css";
-import BookmarksTemplate from "./BookmarksTemplate";
 import axios from "axios";
 import Navbar from "../Navbar/Navbar";
 import StickySidebar from "../Sidebar/StickySidebar";
+import BookmarkCard from "./BookmarkCard";
+import "./Bookmarks.css";
 
-const Bookmarks = ({ currentUser }) => {
+const Bookmarks = () => {
   const [bookmarkedPosts, setBookmarkedPosts] = useState([]);
 
   useEffect(() => {
@@ -32,7 +32,7 @@ const Bookmarks = ({ currentUser }) => {
       <Navbar />
       <div className="bookmark-page" style={{ marginTop: "80px" }}>
         <div className="left">
-          <StickySidebar  />
+          <StickySidebar />
         </div>
         <div className="right">
           <div className="book-title">
@@ -41,7 +41,7 @@ const Bookmarks = ({ currentUser }) => {
           <div className="bookmark-container">
             {bookmarkedPosts.length ? (
               bookmarkedPosts.map((post, index) => (
-                <BookmarksTemplate key={post._id} bookmarkPhoto={post.image} />
+                <BookmarkCard key={post._id} bookmarkPhoto={post.image} />
               ))
             ) : (
               <p>No bookmarks found</p>

@@ -1,10 +1,9 @@
 import React, { useState, useRef } from "react";
 import "./Profile.css";
-import { assets } from "../images/assets";
 import { UilEdit } from "@iconscout/react-unicons";
 import Navbar from "../Navbar/Navbar";
 import { useSelector, useDispatch } from "react-redux";
-import { loginSuccess } from "../../utils/authSlice";
+import { loginSuccess } from "../../redux/Slices/authSlice";
 import axios from "axios";
 
 const Profile = () => {
@@ -13,7 +12,7 @@ const Profile = () => {
 
   const [currentUser, setCurrentuser] = useState(user);
   const [profileImage, setProfileImage] = useState(
-    user.profilePicture || assets.profile7
+    user.profilePicture || ""
   );
   const [description, setDescription] = useState(user.bio);
   const [name, setName] = useState(user.username);
@@ -45,7 +44,7 @@ const Profile = () => {
       setFile(file); // save original file for FormData
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result); // just for preview
+        setProfileImage(reader.result);
       };
       reader.readAsDataURL(file);
     }

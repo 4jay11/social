@@ -6,7 +6,7 @@ import {
   UilEnvelopeAlt,
   UilBookmarkFull,
 } from "@iconscout/react-unicons";
-import { assets } from "../images/assets";
+// import { assets } from "../../../../dummy/images/assets";
 import { useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 import { useSelector } from "react-redux";

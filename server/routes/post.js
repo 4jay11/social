@@ -137,7 +137,7 @@ postRouter.get("/post-generator", userAuth, async (req, res) => {
 
 postRouter.get("/", userAuth, async (req, res) => {
   try {
-    const { _id, following } = req.user; // Authenticated user data
+    const { _id, following } = req.user;
 
     // Convert query params to numbers
     const page = parseInt(req.query.page) || 1;

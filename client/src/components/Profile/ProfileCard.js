@@ -10,7 +10,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useDispatch } from "react-redux";
-import { updateFollowing } from "../../utils/authSlice";
+import { updateFollowing } from "../../redux/Slices/authSlice";
 
 
 const ProfileCard = ({ currentUser, posts }) => {

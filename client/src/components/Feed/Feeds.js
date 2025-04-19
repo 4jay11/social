@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import FeedTemplate from "./FeedTemplate";
 import FeedShimmer from "../ShimmerUI/FeedShimmer";
 import { formatDistanceToNow, parseISO } from "date-fns";
-import { assets } from "../images/assets";
 import "./Feeds.css";
+import FeedCard from "./FeedCard";
 
 const Feeds = () => {
   const [posts, setPosts] = useState([]);
@@ -22,7 +21,7 @@ const Feeds = () => {
           }
         );
         console.log(res.data);
-        
+
         setPosts(res.data);
         if (res.data.length >= 0) {
           setLoading(false);
@@ -73,17 +72,17 @@ const Feeds = () => {
         <FeedShimmer />
       ) : posts.length > 0 && !loading ? (
         posts.map((post) => (
-          <FeedTemplate
+          <FeedCard
             key={post._id}
             user_id={post?.userId?._id || ""}
             post_id={post._id}
-            profilePhoto={post?.userId?.profilePicture || assets.profile7}
+            profilePhoto={post?.userId?.profilePicture || ""}
             username={post?.userId?.username || "Unknown User"}
             location={post.location || "Unknown Location"}
             timeAgo={formatDistanceToNow(parseISO(post.createdAt), {
               addSuffix: true,
             })}
-            feedPhoto={post.image || assets.feed1}
+            feedPhoto={post.image || ""}
             likedBy={post.likes || []}
             bookmarkBy={post.bookmarks || []}
             caption={post.content || "No caption"}

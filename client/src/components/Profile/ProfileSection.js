@@ -3,9 +3,9 @@ import Navbar from "../Navbar/Navbar";
 import ProfileCard from "./ProfileCard";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import FeedTemplate from "../Feed/FeedTemplate";
+import FeedCard from "../Feed/FeedCard";
+import { FeedNavigationButton } from "../Feed/FeedPopup";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { assets } from "../images/assets";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import "./ProfileSection.css";
 
@@ -19,31 +19,29 @@ const ProfileSection = () => {
 
   const { id } = useParams();
 
-   const handlePostDelete = async (id) => {
-     try {
-       const res = await axios.delete(
-         `http://localhost:8000/post/deletePost/${id}`,
-         {
-           withCredentials: true,
-           headers: {
-             "Content-Type": "application/json",
-           },
-         }
-       );
+  const handlePostDelete = async (id) => {
+    try {
+      const res = await axios.delete(
+        `http://localhost:8000/post/deletePost/${id}`,
+        {
+          withCredentials: true,
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-       console.log("Post deleted successfully");
-       setPosts((prevPosts) =>
-         prevPosts.filter((post) => post._id !== id)
-       );
-     } catch (err) {
-       console.error("Failed to delete comment:", err.message);
-     }
+      console.log("Post deleted successfully");
+      setPosts((prevPosts) => prevPosts.filter((post) => post._id !== id));
+    } catch (err) {
+      console.error("Failed to delete comment:", err.message);
+    }
   };
   const handlePostEdit = async (id, text) => {
     try {
       const res = await axios.patch(
         `http://localhost:8000/post/update/${id}`,
-        { caption : text },
+        { caption: text },
         {
           withCredentials: true,
           headers: {
@@ -70,9 +68,6 @@ const ProfileSection = () => {
       );
     }
   };
-
-
-
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -202,32 +197,15 @@ const ProfileSection = () => {
                   ✖
                 </button>
 
-                <button
-                  onClick={handlePrev}
-                  style={{
-                    position: "absolute",
-                    height: "40px",
-                    width: "40px",
-                    top: "44%",
-                    left: "10px",
-                    transform: "translateY(-50%)",
-                    zIndex: 10,
-                    backgroundColor: "white",
-                    border: "none",
-                    borderRadius: "50%",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-                    cursor: "pointer",
-                    padding: "6px 0 0 0",
-                  }}
-                >
+                <FeedNavigationButton direction="left" onClick={handlePrev}>
                   <FaArrowLeft />
-                </button>
+                </FeedNavigationButton>
 
-                <FeedTemplate
+                <FeedCard
                   key={selectedPost._id}
                   user_id={currentUser?._id}
                   post_id={selectedPost._id}
-                  profilePhoto={currentUser?.profilePicture || assets.profile7}
+                  profilePhoto={currentUser?.profilePicture || ""}
                   username={currentUser?.username || "Unknown User"}
                   location={selectedPost.location || "Unknown Location"}
                   timeAgo={formatDistanceToNow(
@@ -236,7 +214,7 @@ const ProfileSection = () => {
                       addSuffix: true,
                     }
                   )}
-                  feedPhoto={selectedPost.image || assets.feed1}
+                  feedPhoto={selectedPost.image || ""}
                   likedBy={selectedPost.likes || []}
                   bookmarkBy={selectedPost.bookmarks || []}
                   caption={selectedPost.content || "No caption"}
@@ -247,26 +225,9 @@ const ProfileSection = () => {
                   handlePostEdit={handlePostEdit}
                 />
 
-                <button
-                  onClick={handleNext}
-                  style={{
-                    position: "absolute",
-                    height: "40px",
-                    width: "40px",
-                    top: "44%",
-                    right: "10px",
-                    transform: "translateY(-50%)",
-                    zIndex: 10,
-                    backgroundColor: "white",
-                    border: "none",
-                    borderRadius: "50%",
-                    boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-                    cursor: "pointer",
-                    padding: "6px 0 0 0",
-                  }}
-                >
+                <FeedNavigationButton direction="right" onClick={handleNext}>
                   <FaArrowRight />
-                </button>
+                </FeedNavigationButton>
               </div>
             </div>
           )}

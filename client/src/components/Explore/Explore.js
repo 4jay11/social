@@ -3,12 +3,9 @@ import "./Explore.css";
 import ExploreCard from "./ExploreCard";
 import axios from "axios";
 import Navbar from "../Navbar/Navbar";
-import FeedTemplate from "../Feed/FeedTemplate";
-import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
-import { formatDistanceToNow, parseISO } from "date-fns";
-import { useSelector } from "react-redux";
-import { assets } from "../images/assets";
 import StickySidebar from "../Sidebar/StickySidebar";
+import { useSelector } from "react-redux";
+import FeedPopup from "../Feed/FeedPopup";
 
 const Explore = () => {
   const currentUser = useSelector((state) => state.auth.user);
@@ -16,6 +13,7 @@ const Explore = () => {
   const [showFeedPopup, setShowFeedPopup] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(false);
+
   useEffect(() => {
     const fetchExplore = async () => {
       try {
@@ -34,16 +32,6 @@ const Explore = () => {
 
     fetchExplore();
   }, [refreshTrigger]);
-
-  const handlePrev = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? explorePosts.length - 1 : prev - 1
-    );
-  };
-
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % explorePosts.length);
-  };
 
   const handleLike = async (postId) => {
     try {
@@ -81,8 +69,6 @@ const Explore = () => {
     }
   };
 
-  const selectedPost = explorePosts[currentIndex];
-
   return (
     <div className="book">
       <Navbar />
@@ -112,82 +98,18 @@ const Explore = () => {
           </div>
         </div>
 
-        {showFeedPopup && selectedPost && (
-          <div className="feed-popup-overlay">
-            <div className="feed-popup-content">
-              <button
-                className="close-btn"
-                onClick={() => {
-                  setShowFeedPopup(false);
-                  setCurrentIndex(null);
-                }}
-              >
-                ✖
-              </button>
-
-              <button
-                onClick={handlePrev}
-                style={{
-                  position: "absolute",
-                  height: "40px",
-                  width: "40px",
-                  top: "44%",
-                  left: "10px",
-                  transform: "translateY(-50%)",
-                  zIndex: 10,
-                  backgroundColor: "white",
-                  border: "none",
-                  borderRadius: "50%",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-                  cursor: "pointer",
-                  padding: "6px 0 0 0",
-                }}
-              >
-                <FaArrowLeft />
-              </button>
-
-              <FeedTemplate
-                key={selectedPost._id}
-                user_id={selectedPost.userId?._id}
-                post_id={selectedPost._id}
-                profilePhoto={
-                  selectedPost.userId?.profilePicture || assets.profile7
-                }
-                username={selectedPost.userId?.username || "Unknown"}
-                location={selectedPost.location || "Unknown Location"}
-                timeAgo={formatDistanceToNow(parseISO(selectedPost.createdAt), {
-                  addSuffix: true,
-                })}
-                feedPhoto={selectedPost.image}
-                likedBy={selectedPost.likes || []}
-                bookmarkBy={selectedPost.bookmarks || []}
-                caption={selectedPost.content}
-                onBookmark={handleBookmark}
-                onLike={handleLike}
-              />
-
-              <button
-                onClick={handleNext}
-                style={{
-                  position: "absolute",
-                  height: "40px",
-                  width: "40px",
-                  top: "44%",
-                  right: "10px",
-                  transform: "translateY(-50%)",
-                  zIndex: 10,
-                  backgroundColor: "white",
-                  border: "none",
-                  borderRadius: "50%",
-                  boxShadow: "0 2px 8px rgba(0, 0, 0, 0.2)",
-                  cursor: "pointer",
-                  padding: "6px 0 0 0",
-                }}
-              >
-                <FaArrowRight />
-              </button>
-            </div>
-          </div>
+        {showFeedPopup && (
+          <FeedPopup
+            posts={explorePosts}
+            currentIndex={currentIndex}
+            setCurrentIndex={setCurrentIndex}
+            onClose={() => {
+              setShowFeedPopup(false);
+              setCurrentIndex(null);
+            }}
+            onLike={handleLike}
+            onBookmark={handleBookmark}
+          />
         )}
       </div>
     </div>

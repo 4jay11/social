@@ -1,80 +1,77 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import FriendRequestCard from "./FriendRequestCard";
+import "./FriendRequest.css";
 
-const FriendRequests = ({
-  profilePhoto,
-  username,
-  mutual,
-  requestid,
-  userid,
-  onRequestHandled,
-}) => {
-  const navigate = useNavigate();
+const FriendRequests = () => {
+  const currentUser = useSelector((state) => state.auth.user);
+  const [friendRequests, setFriendRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleProfileClick = () => {
-    navigate("/profile/" + userid);
+  useEffect(() => {
+    if (!currentUser?._id) return;
+
+    const fetchFriendRequests = async () => {
+      try {
+        const { data } = await axios.get(
+          "http://localhost:8000/connection/all-requests/",
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
+
+        setFriendRequests(data || []);
+      } catch (err) {
+        console.error("Error fetching friend requests:", err);
+        setError(
+          err.response?.data?.error || "Failed to load friend requests."
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFriendRequests();
+  }, [friendRequests]);
+
+  // Function to remove request from state after action
+  const handleRequestAction = (id) => {
+    setFriendRequests((prevRequests) =>
+      prevRequests.filter((request) => request.senderId._id !== id)
+    );
   };
 
-  const acceptRequest = async () => {
-    try {
-      const response = await axios.patch(
-        `http://localhost:8000/connection/request/accept/${requestid}`,
-        {},
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true, 
-        }
-      );
-
-      console.log("Friend request accepted:", response.data);
-      onRequestHandled(requestid);
-    } catch (error) {
-      console.error("Error accepting friend request:", error);
-    }
-  };
-
-  const declineRequest = async () => {
-    try {
-      const response = await axios.delete(
-        `http://localhost:8000/connection/${requestid}`,
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-      console.log("Friend request declined:", response.data);
-      onRequestHandled(requestid);
-    } catch (error) {
-      console.error("Error declining friend request:", error);
-    }
-  };
+  if (loading) return <p>Loading requests...</p>;
+  if (error) return <p className="error">{error}</p>;
 
   return (
     <div className="friend-requests">
-      <div className="request">
-        <div className="info">
-          <div className="profile-photo">
-            <img
-              onClick={handleProfileClick}
-              src={profilePhoto}
-              alt="Profile"
+      {friendRequests.length === 0 ? (
+        <p>No friend requests</p>
+      ) : (
+        friendRequests.map((request) => {
+          if (!request.senderId) return null;
+
+          const mutualConnections = request.senderId.following.filter((id) =>
+            currentUser.following.includes(id)
+          ).length;
+
+          return (
+            <FriendRequestCard
+              key={request._id}
+              requestid={request._id}
+              userid={request.senderId._id}
+              username={request.senderId.username}
+              profilePhoto={request.senderId.profilePicture}
+              mutual={mutualConnections}
+              onRequestHandled={handleRequestAction}
             />
-          </div>
-          <div>
-            <h5>{username}</h5>
-            <p className="text-muted">{mutual} mutual friends</p>
-          </div>
-        </div>
-        <div className="action">
-          <button className="btn btn-primary" onClick={acceptRequest}>
-            Accept
-          </button>
-          <button className="btn" onClick={declineRequest}>
-            Decline
-          </button>
-        </div>
-      </div>
+          );
+        })
+      )}
     </div>
   );
 };

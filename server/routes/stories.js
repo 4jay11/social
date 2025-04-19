@@ -33,6 +33,29 @@ storyRouter.post("/addNewStory", userAuth, async (req, res) => {
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });
+storyRouter.get("/getStoryById/:storyId", userAuth, async (req, res) => {
+  try {
+    const { storyId } = req.params;
+
+    // Validate storyId
+    if (!validator.isMongoId(storyId)) {
+      return res.status(400).json({ error: "Invalid storyId" });
+    }
+
+    const story = await Stories.findById(storyId)
+      .populate("userId", "username profileImage")
+
+    
+    if (!story) {
+      return res.status(404).json({ error: "Story not found" });
+    }
+
+    res.status(200).json({ story });
+  } catch (err) {
+    console.error("Error fetching story:", err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+});
 
 storyRouter.delete("/deleteStory/:story_id", userAuth, async (req, res) => {
   try {
@@ -63,9 +86,9 @@ storyRouter.patch("/view/:storyId", userAuth, async (req, res) => {
     const { _id } = req.user;
     const story = await Stories.findById(storyId);
     if (!story) return res.status(404).json({ error: "Story not found" });
-    if (story.userId.toString() === _id) {
-      return res.status(401).json({ error: "You can't view your own story" });
-    }
+    // if (story.userId.toString() === _id) {
+    //   return res.status(401).json({ error: "You can't view your own story" });
+    // }
     const updatedStory = await Stories.findByIdAndUpdate(
       storyId,
       { $addToSet: { views: _id } },
@@ -83,23 +106,49 @@ storyRouter.patch("/like/:storyId", userAuth, async (req, res) => {
   try {
     const { storyId } = req.params;
     const { _id } = req.user;
-    // Check th storyId
-    if (!validator.isMongoId(storyId))
+
+    // Validate storyId
+    if (!validator.isMongoId(storyId)) {
       return res.status(400).json({ error: "Invalid storyId" });
-    const story = await Stories.findById(storyId);
-    if (!story) return res.status(404).json({ error: "Story not found" });
-    if (story.userId.toString() === _id) {
-      return res.status(401).json({ error: "You can't like your own story" });
     }
-    const updatedStory = await Stories.findByIdAndUpdate(
-      storyId,
-      { $addToSet: { likes: _id } },
-      { new: true }
-    );
-    if (!updatedStory)
+
+    const story = await Stories.findById(storyId);
+    if (!story) {
       return res.status(404).json({ error: "Story not found" });
-    res.status(200).json({ message: "Story liked successfully" });
+    }
+
+    // Prevent user from liking their own story
+    // if (story.userId.toString() === _id.toString()) {
+    //   return res.status(401).json({ error: "You can't like your own story" });
+    // }
+
+    // Check if the story is already liked by the user
+    const alreadyLiked = story.likes.includes(_id);
+
+    let updatedStory;
+    if (alreadyLiked) {
+      // Unlike the story
+      updatedStory = await Stories.findByIdAndUpdate(
+        storyId,
+        { $pull: { likes: _id } },
+        { new: true }
+      );
+      return res
+        .status(200)
+        .json({ message: "Story unliked successfully", liked: false });
+    } else {
+      // Like the story
+      updatedStory = await Stories.findByIdAndUpdate(
+        storyId,
+        { $addToSet: { likes: _id } },
+        { new: true }
+      );
+      return res
+        .status(200)
+        .json({ message: "Story liked successfully", liked: true });
+    }
   } catch (err) {
+    console.error("Error liking/unliking story:", err.message);
     res.status(500).json({ message: "Server error", error: err.message });
   }
 });

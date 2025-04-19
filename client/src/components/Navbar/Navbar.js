@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../../utils/authSlice";
+import { logout } from "../../redux/Slices/authSlice";
 import { UilSearch } from "@iconscout/react-unicons";
 import debounce from "lodash.debounce";
 import axios from "axios";

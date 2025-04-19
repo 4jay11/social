@@ -1,24 +1,20 @@
-import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Stories from "./components/Stories/Stories";
-import CreatePost from "./components/Post/CreatePost";
-import Messages from "./components/Message/Messages";
-import "./components/App.css";
+import CreatePost from "./components/Upload/CreatePost";
 import Feeds from "./components/Feed/Feeds";
-import FriendRequestsTemplate from "./components/FriendRequest/FriendRequestsTemplate";
-import { users } from "./jsonData/data";
-import axios from "axios";
-import { useSelector } from "react-redux";
-import { Navigate, useNavigate } from "react-router-dom";
-import StickySidebar from "./components/Sidebar/StickySidebar";
+import FriendRequests from "./components/FriendRequest/FriendRequests";
+
+import "./App.css";
 const App = () => {
   const currentUser = useSelector((state) => state.auth.user);
   const navigate = useNavigate();
 
   const handleUpload = () => {
-    navigate("/upload")
-  }
+    navigate("/upload");
+  };
   return (
     <div className="App">
       <Navbar currentUser={currentUser} />
@@ -46,7 +42,7 @@ const App = () => {
           <div className="right">
             {/* <Messages /> */}
             <h4>Requests</h4>
-            <FriendRequestsTemplate currentUser={currentUser} />
+            <FriendRequests currentUser={currentUser} />
           </div>
         </div>
       </main>
